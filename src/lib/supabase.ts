@@ -4,11 +4,37 @@ import { Database } from './database.types';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+// Create a mock client if environment variables are not set
+const createSupabaseClient = () => {
+  if (!supabaseUrl || !supabaseAnonKey || 
+      supabaseUrl === 'your_supabase_url_here' || 
+      supabaseAnonKey === 'your_supabase_anon_key_here') {
+    console.warn('Supabase environment variables not configured. Using mock client.');
+    
+    // Return a mock client that doesn't throw errors
+    return {
+      auth: {
+        signUp: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        signInWithPassword: async () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        signOut: async () => ({ error: null }),
+        getUser: async () => ({ data: { user: null }, error: null }),
+      },
+      from: () => ({
+        select: () => ({ data: [], error: null }),
+        insert: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        update: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        delete: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        eq: () => ({ data: [], error: null }),
+        order: () => ({ data: [], error: null }),
+        single: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+      }),
+    } as any;
+  }
+  
+  return createClient<Database>(supabaseUrl, supabaseAnonKey);
+};
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+export const supabase = createSupabaseClient();
 
 // Auth helpers
 export const auth = {
