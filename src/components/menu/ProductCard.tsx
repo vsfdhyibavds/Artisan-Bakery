@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Star, Info, Heart, Leaf } from 'lucide-react';
 import { Product } from '../../lib/types';
 import { formatPrice } from '../../lib/utils';
+import { useCartStore } from '../../stores/cartStore';
 
 interface ProductCardProps {
   product: Product;
@@ -12,11 +13,16 @@ interface ProductCardProps {
 export default function ProductCard({ product, index }: ProductCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const { addItem } = useCartStore();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Add to cart logic here
-    console.log('Added to cart:', product.name);
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.specialPrice || product.price,
+      image: product.image,
+    });
   };
 
   const toggleLike = (e: React.MouseEvent) => {
@@ -155,6 +161,10 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         <ProductDetailsModal
           product={product}
           onClose={() => setShowDetails(false)}
+          onAddToCart={() => {
+            handleAddToCart({} as React.MouseEvent);
+            setShowDetails(false);
+          }}
         />
       )}
     </>
@@ -165,9 +175,10 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 interface ProductDetailsModalProps {
   product: Product;
   onClose: () => void;
+  onAddToCart: () => void;
 }
 
-function ProductDetailsModal({ product, onClose }: ProductDetailsModalProps) {
+function ProductDetailsModal({ product, onClose, onAddToCart }: ProductDetailsModalProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -258,7 +269,10 @@ function ProductDetailsModal({ product, onClose }: ProductDetailsModalProps) {
           </div>
 
           <div className="flex gap-4">
-            <button className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2">
+            <button 
+              onClick={onAddToCart}
+              className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            >
               <ShoppingCart className="w-5 h-5" />
               Add to Cart
             </button>

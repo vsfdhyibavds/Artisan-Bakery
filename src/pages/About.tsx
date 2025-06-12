@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Award, Heart, Clock, Leaf, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const stats = [
   { label: 'Years of Experience', value: '39', icon: Clock },
@@ -60,6 +61,20 @@ const values = [
 ];
 
 export default function About() {
+  const navigate = useNavigate();
+
+  const handleVisitBakery = () => {
+    navigate('/contact');
+  };
+
+  const handleViewMenu = () => {
+    navigate('/menu');
+  };
+
+  const handleOrderOnline = () => {
+    navigate('/order');
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Hero Section */}
@@ -80,10 +95,16 @@ export default function About() {
                 What started as a small family business has grown into a beloved local institution.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="btn-primary">
+                <button 
+                  onClick={handleVisitBakery}
+                  className="btn-primary"
+                >
                   Visit Our Bakery
                 </button>
-                <button className="btn-outline">
+                <button 
+                  onClick={handleViewMenu}
+                  className="btn-outline"
+                >
                   View Our Menu
                 </button>
               </div>
@@ -348,10 +369,16 @@ export default function About() {
             transition={{ delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <button className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
+            <button 
+              onClick={handleVisitBakery}
+              className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+            >
               Visit Our Bakery
             </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
+            <button 
+              onClick={handleOrderOnline}
+              className="border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+            >
               Order Online
             </button>
           </motion.div>

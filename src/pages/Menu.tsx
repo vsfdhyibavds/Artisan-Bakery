@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, ShoppingCart, Star, Leaf } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/menu/ProductCard';
 import { Product } from '../lib/types';
@@ -26,6 +27,7 @@ export default function Menu() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
@@ -63,6 +65,19 @@ export default function Menu() {
 
     return filtered;
   }, [selectedCategory, searchQuery, sortBy]);
+
+  const handleCustomOrder = () => {
+    navigate('/contact');
+  };
+
+  const handleContactUs = () => {
+    navigate('/contact');
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('all');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -196,10 +211,7 @@ export default function Menu() {
                   Try adjusting your search or filter criteria
                 </p>
                 <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('all');
-                  }}
+                  onClick={clearFilters}
                   className="btn-primary"
                 >
                   Clear Filters
@@ -220,11 +232,17 @@ export default function Menu() {
             We offer custom orders for special occasions and dietary requirements.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-primary flex items-center gap-2">
+            <button 
+              onClick={handleCustomOrder}
+              className="btn-primary flex items-center gap-2"
+            >
               <ShoppingCart className="w-5 h-5" />
               Place Custom Order
             </button>
-            <button className="btn-outline">
+            <button 
+              onClick={handleContactUs}
+              className="btn-outline"
+            >
               Contact Us
             </button>
           </div>

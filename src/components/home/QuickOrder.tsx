@@ -1,6 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Clock, Star, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useCartStore } from '../../stores/cartStore';
+import toast from 'react-hot-toast';
 
 const quickOrderItems = [
   {
@@ -42,6 +45,22 @@ const quickOrderItems = [
 ];
 
 export default function QuickOrder() {
+  const navigate = useNavigate();
+  const { addItem } = useCartStore();
+
+  const handleQuickAdd = (item: typeof quickOrderItems[0]) => {
+    addItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+    });
+  };
+
+  const handleViewMenu = () => {
+    navigate('/menu');
+  };
+
   return (
     <section className="py-16 bg-white dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -106,7 +125,10 @@ export default function QuickOrder() {
                     <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
                       ${item.price.toFixed(2)}
                     </span>
-                    <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                    <button 
+                      onClick={() => handleQuickAdd(item)}
+                      className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                    >
                       Quick Add
                     </button>
                   </div>
@@ -123,7 +145,10 @@ export default function QuickOrder() {
           transition={{ delay: 0.4 }}
           className="text-center mt-12"
         >
-          <button className="bg-accent-500 hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors inline-flex items-center gap-2">
+          <button 
+            onClick={handleViewMenu}
+            className="bg-accent-500 hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors inline-flex items-center gap-2"
+          >
             <ShoppingBag className="w-5 h-5" />
             View Full Menu
           </button>

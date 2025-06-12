@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const heroImages = [
   {
@@ -22,6 +23,7 @@ const heroImages = [
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,6 +39,14 @@ export default function Hero() {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const handleOrderNow = () => {
+    navigate('/order');
+  };
+
+  const handleViewMenu = () => {
+    navigate('/menu');
   };
 
   return (
@@ -101,11 +111,17 @@ export default function Hero() {
             transition={{ delay: 0.6, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <button className="bg-accent-500 hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors flex items-center justify-center gap-2">
+            <button 
+              onClick={handleOrderNow}
+              className="bg-accent-500 hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors flex items-center justify-center gap-2"
+            >
               <ShoppingBag className="w-5 h-5" />
               Order Now
             </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
+            <button 
+              onClick={handleViewMenu}
+              className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
+            >
               View Menu
             </button>
           </motion.div>
