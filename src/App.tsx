@@ -12,6 +12,13 @@ import About from './pages/About';
 import Order from './pages/Order';
 import Blog from './pages/Blog';
 import Events from './pages/Events';
+import Contact from './pages/Contact';
+import Careers from './pages/Careers';
+import Catering from './pages/Catering';
+import FAQ from './pages/FAQ';
+import Press from './pages/Press';
+import Returns from './pages/Returns';
+import Shipping from './pages/Shipping';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,6 +64,13 @@ function App() {
               <Route path="/order" element={<Order />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/events" element={<Events />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/catering" element={<Catering />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/press" element={<Press />} />
+              <Route path="/returns" element={<Returns />} />
+              <Route path="/shipping" element={<Shipping />} />
             </Routes>
           </main>
           <Footer />
