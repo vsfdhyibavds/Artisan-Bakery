@@ -1,104 +1,33 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabaseManager } from './supabase-config';
 import { Database } from './database.types';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Initialize Supabase client with auto-configuration
+export const supabase = supabaseManager.initializeClient();
 
-// Create a mock client if environment variables are not set
-const createSupabaseClient = () => {
-  if (!supabaseUrl || !supabaseAnonKey || 
-      supabaseUrl === 'your_supabase_url_here' || 
-      supabaseAnonKey === 'your_supabase_anon_key_here') {
-    console.warn('Supabase environment variables not configured. Using mock client.');
-    
-    // Return a comprehensive mock client that mimics Supabase API
-    return {
-      auth: {
-        signUp: async () => ({ 
-          data: { user: null, session: null }, 
-          error: { message: 'Supabase not configured - using mock data' } 
-        }),
-        signInWithPassword: async () => ({ 
-          data: { user: null, session: null }, 
-          error: { message: 'Supabase not configured - using mock data' } 
-        }),
-        signOut: async () => ({ error: null }),
-        getUser: async () => ({ 
-          data: { user: null }, 
-          error: null 
-        }),
-        getSession: async () => ({
-          data: { session: null },
-          error: null
-        }),
-        onAuthStateChange: () => ({
-          data: { subscription: { unsubscribe: () => {} } }
-        })
-      },
-      from: (table: string) => ({
-        select: (columns?: string) => ({
-          eq: () => ({ data: [], error: null }),
-          order: () => ({ data: [], error: null }),
-          single: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-          limit: () => ({ data: [], error: null }),
-          range: () => ({ data: [], error: null }),
-          gte: () => ({ data: [], error: null }),
-          lte: () => ({ data: [], error: null }),
-          then: (callback: any) => callback({ data: [], error: null })
-        }),
-        insert: (data: any) => ({
-          select: () => ({
-            single: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-            then: (callback: any) => callback({ data: null, error: { message: 'Supabase not configured' } })
-          }),
-          then: (callback: any) => callback({ data: null, error: { message: 'Supabase not configured' } })
-        }),
-        update: (data: any) => ({
-          eq: () => ({
-            select: () => ({
-              single: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-              then: (callback: any) => callback({ data: null, error: { message: 'Supabase not configured' } })
-            }),
-            then: (callback: any) => callback({ data: null, error: { message: 'Supabase not configured' } })
-          }),
-          then: (callback: any) => callback({ data: null, error: { message: 'Supabase not configured' } })
-        }),
-        delete: () => ({
-          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-          then: (callback: any) => callback({ data: null, error: { message: 'Supabase not configured' } })
-        })
-      }),
-      channel: (name: string) => ({
-        on: () => ({ subscribe: () => ({ unsubscribe: () => {} }) }),
-        subscribe: () => ({ unsubscribe: () => {} })
-      }),
-      functions: {
-        invoke: async () => ({ 
-          data: null, 
-          error: { message: 'Supabase not configured' } 
-        })
-      }
-    } as any;
-  }
-  
-  return createClient<Database>(supabaseUrl, supabaseAnonKey);
+// Auto-setup for current platform
+supabaseManager.autoSetupForPlatform();
+
+// Export configuration utilities
+export const configureSupabase = (url: string, anonKey: string) => {
+  return supabaseManager.configureSupabase(url, anonKey);
 };
 
-export const supabase = createSupabaseClient();
+export const getSupabaseStatus = () => {
+  return supabaseManager.getConfigurationStatus();
+};
 
-// Auth helpers with proper error handling
+// Enhanced auth helpers with better error handling
 export const auth = {
   signUp: async (email: string, password: string, userData: any) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: userData
-        }
+        options: { data: userData }
       });
       return { data, error };
     } catch (err) {
+      console.error('Auth signup error:', err);
       return { data: null, error: { message: 'Authentication service unavailable' } };
     }
   },
@@ -111,6 +40,7 @@ export const auth = {
       });
       return { data, error };
     } catch (err) {
+      console.error('Auth signin error:', err);
       return { data: null, error: { message: 'Authentication service unavailable' } };
     }
   },
@@ -120,6 +50,7 @@ export const auth = {
       const { error } = await supabase.auth.signOut();
       return { error };
     } catch (err) {
+      console.error('Auth signout error:', err);
       return { error: { message: 'Authentication service unavailable' } };
     }
   },
@@ -129,12 +60,13 @@ export const auth = {
       const { data: { user }, error } = await supabase.auth.getUser();
       return { user, error };
     } catch (err) {
+      console.error('Get user error:', err);
       return { user: null, error: { message: 'Authentication service unavailable' } };
     }
   }
 };
 
-// Database helpers with proper error handling
+// Enhanced database helpers with retry logic
 export const db = {
   // Products
   getProducts: async () => {
@@ -146,6 +78,7 @@ export const db = {
         .order('name');
       return { data: data || [], error };
     } catch (err) {
+      console.error('Database error:', err);
       return { data: [], error: { message: 'Database service unavailable' } };
     }
   },

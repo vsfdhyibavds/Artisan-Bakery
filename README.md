@@ -1,123 +1,202 @@
-# Artisan Bakery
+# Artisan Bakery - Complete Full-Stack Application
 
-A modern, responsive web application for an artisan bakery. This project showcases the bakery's menu, specials, testimonials, location and hours, and allows customers to place orders online.
+A modern, responsive web application for an artisan bakery with complete backend integration, authentication, and e-commerce functionality.
 
-## Features
+## 🚀 **Auto-Configuration Features**
 
-- Browse bakery menu with categorized products
-- View daily specials and customer testimonials
-- Quick order form for easy online ordering
-- Responsive design for desktop and mobile devices
-- Location and business hours information
-- User authentication and account management
-- Shopping cart with real-time updates
-- Order history and tracking for customers
-- Newsletter signup for promotions and updates
-- Integration with payment gateways for secure checkout
+### **Supabase Auto-Setup**
+The application automatically detects and configures Supabase from multiple sources:
 
-## Installation
+1. **Environment Variables** (highest priority)
+2. **Local Storage** (user configured)
+3. **Demo Mode** (fallback for development)
 
-### Prerequisites
+### **Platform Detection**
+- Automatically detects deployment platform (Netlify, Vercel, localhost)
+- Configures appropriate settings for each environment
+- Handles environment variables seamlessly
 
-- Node.js (v14 or higher recommended)
-- npm (comes with Node.js)
+## 🛠️ **Quick Setup**
 
-### Steps
+### **Option 1: Automatic Setup**
+1. Clone the repository
+2. Run `npm install`
+3. Run `npm run dev`
+4. Click the "Setup" button in the header to configure Supabase
+5. Enter your Supabase credentials or use demo mode
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/Artisan-Bakery.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd Artisan-Bakery
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-## Usage
-
-### Development Server
-
-Start the development server with hot reload:
-
-```bash
-npm run dev
+### **Option 2: Manual Configuration**
+1. Create a `.env` file with your Supabase credentials:
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
+2. Run `npm install && npm run dev`
 
-Open your browser and go to `http://localhost:3000` to view the app.
+### **Option 3: Demo Mode**
+- The app works out of the box with mock data
+- No configuration required for development
+- Perfect for testing and demonstration
 
-### Build for Production
+## 🗄️ **Database Features**
 
-To build the app for production:
+### **Complete Schema**
+- **Products** - Full catalog with categories, pricing, allergens
+- **Orders** - Complete order management system
+- **Customers** - User profiles and authentication
+- **Events** - Workshop and class management
+- **Blog** - Content management system
+- **Testimonials** - Customer review system
 
+### **Security**
+- Row Level Security (RLS) on all tables
+- User-based data access policies
+- Secure authentication with Supabase Auth
+
+## 🔧 **Backend Integration**
+
+### **Real-time Features**
+- Live order status updates
+- Real-time inventory management
+- Instant notifications
+
+### **E-commerce**
+- Shopping cart with persistence
+- Order processing workflow
+- Custom cake builder
+- Payment integration ready
+
+### **Content Management**
+- Blog post management
+- Event registration system
+- Newsletter subscriptions
+- Customer testimonials
+
+## 🎯 **Key Features**
+
+### **For Customers**
+- Browse products by category
+- Add items to cart
+- Create custom cakes
+- Register for events
+- Leave testimonials
+- Subscribe to newsletter
+
+### **For Business**
+- Order management
+- Inventory tracking
+- Customer management
+- Event scheduling
+- Content publishing
+- Analytics ready
+
+## 🚀 **Deployment**
+
+### **Netlify**
 ```bash
 npm run build
+# Deploy dist/ folder to Netlify
 ```
 
-The production-ready files will be in the `dist` folder.
-
-### Preview Production Build
-
-To locally preview the production build:
-
+### **Vercel**
 ```bash
-npm run preview
+npm run build
+# Deploy with Vercel CLI or GitHub integration
 ```
 
-### Running Tests
-
-To run the test suite (if applicable):
-
+### **Docker**
 ```bash
-npm run test
+docker-compose up --build
 ```
 
-### Linting and Formatting
+## 🔐 **Environment Variables**
 
-To check code quality and formatting:
-
-```bash
-npm run lint
-npm run format
+### **Required for Production**
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-## Technologies Used
-
-- React with TypeScript
-- Vite for build tooling and development server
-- Tailwind CSS for styling
-- ESLint for linting and code quality
-- Supabase for backend services and authentication
-
-## Project Structure
-
-```
-src/
-├── components/       # Reusable UI components
-├── data/             # Static data like products and testimonials
-├── lib/              # Utility functions and types
-├── pages/            # Page components for routing
-├── stores/           # State management stores
-├── hooks/            # Custom React hooks
-├── App.tsx           # Main app component
-├── main.tsx          # Entry point
+### **Optional Integrations**
+```env
+VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_key
+VITE_GOOGLE_MAPS_API_KEY=your_maps_key
+VITE_GOOGLE_ANALYTICS_ID=your_analytics_id
 ```
 
-## Architecture and Design
+## 📱 **Progressive Web App**
 
-- Component-based architecture using React functional components and hooks
-- State management with Zustand stores for global state
-- Tailwind CSS for utility-first styling approach
-- Supabase integration for database, authentication, and real-time updates
-- Modular folder structure for scalability and maintainability
+- Responsive design for all devices
+- Offline capability ready
+- Fast loading with optimized assets
+- SEO optimized
 
-## Contributing
+## 🧪 **Development**
 
-Contributions are welcome! Please open issues or submit pull requests for improvements or bug fixes.
+### **Available Scripts**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run type-check` - TypeScript checking
 
-## License
+### **Development Features**
+- Hot Module Replacement
+- TypeScript support
+- Tailwind CSS
+- React Query for state management
+- Zustand for client state
 
-This project is licensed under the MIT License.
+## 🎨 **Design System**
+
+- **Colors**: Primary (brown tones), Accent (warm yellow)
+- **Typography**: Inter + Playfair Display
+- **Components**: Modular and reusable
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+
+## 📊 **State Management**
+
+- **Server State**: React Query (TanStack Query)
+- **Client State**: Zustand stores
+- **Authentication**: Supabase Auth
+- **Cart**: Persistent with localStorage
+
+## 🔒 **Security**
+
+- Environment variable validation
+- Input sanitization
+- XSS protection
+- CSRF protection
+- Secure headers in production
+
+## 📈 **Performance**
+
+- Code splitting
+- Lazy loading
+- Image optimization
+- Bundle optimization
+- Caching strategies
+
+## 🤝 **Contributing**
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 **License**
+
+MIT License - see LICENSE file for details
+
+## 🆘 **Support**
+
+- Check the setup guide above
+- Use the in-app Supabase setup tool
+- Review the demo mode for testing
+- Check environment variable configuration
+
+---
+
+**Built with ❤️ using React, TypeScript, Tailwind CSS, and Supabase**

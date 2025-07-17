@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag, Phone, MapPin, User, LogOut } from 'lucide-react';
+import { Menu, X, ShoppingBag, Phone, MapPin, User, LogOut, Database } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
+import { getSupabaseStatus } from '../../lib/supabase';
 import CartIcon from './CartIcon';
+import SupabaseSetup from './SupabaseSetup';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -22,6 +24,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSupabaseSetup, setShowSupabaseSetup] = useState(false);
+  const [supabaseStatus, setSupabaseStatus] = useState(getSupabaseStatus());
   const location = useLocation();
   const navigate = useNavigate();
   const { user, customer, signOut } = useAuthStore();
@@ -39,6 +43,15 @@ export default function Header({ onAuthClick }: HeaderProps) {
     setIsOpen(false);
     setShowUserMenu(false);
   }, [location]);
+
+  useEffect(() => {
+    // Update Supabase status periodically
+    const interval = setInterval(() => {
+      setSupabaseStatus(getSupabaseStatus());
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -72,8 +85,23 @@ export default function Header({ onAuthClick }: HeaderProps) {
               </Link>
             </div>
           </div>
-          <div className="text-accent-300">
-            Fresh baked daily since 1985
+          <div className="flex items-center gap-4">
+            <div className="text-accent-300">
+              Fresh baked daily since 1985
+            </div>
+            {/* Supabase Status Indicator */}
+            <button
+              onClick={() => setShowSupabaseSetup(true)}
+              className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
+                supabaseStatus.isConfigured
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+              }`}
+              title={supabaseStatus.isConfigured ? 'Supabase Connected' : 'Configure Supabase'}
+            >
+              <Database className="w-3 h-3" />
+              {supabaseStatus.isConfigured ? 'DB' : 'Setup'}
+            </button>
           </div>
         </div>
       </div>
@@ -278,6 +306,12 @@ export default function Header({ onAuthClick }: HeaderProps) {
           )}
         </AnimatePresence>
       </header>
+
+      {/* Supabase Setup Modal */}
+      <SupabaseSetup 
+        isOpen={showSupabaseSetup} 
+        onClose={() => setShowSupabaseSetup(false)} 
+      />
     </>
   );
 }
