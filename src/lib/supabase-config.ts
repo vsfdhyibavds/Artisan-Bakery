@@ -40,8 +40,8 @@ class SupabaseManager {
       },
       // 3. Demo/Development instance (fallback)
       {
-        url: 'https://demo-bakery.supabase.co',
-        anonKey: 'demo-anon-key-for-development',
+        url: 'https://localhost:54321',
+        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOEoJeXxjNx5kTHAHu_j6QIBVhko_WqJzSs8',
         source: 'demo'
       }
     ];
@@ -60,8 +60,8 @@ class SupabaseManager {
     // If no valid config found, return demo config
     console.warn('⚠️ No valid Supabase configuration found, using demo mode');
     return {
-      url: 'https://demo-bakery.supabase.co',
-      anonKey: 'demo-anon-key-for-development',
+      url: 'https://localhost:54321',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOEoJeXxjNx5kTHAHu_j6QIBVhko_WqJzSs8',
       isConfigured: false
     };
   }
@@ -72,7 +72,7 @@ class SupabaseManager {
       anonKey && 
       url !== 'your_supabase_url_here' && 
       anonKey !== 'your_supabase_anon_key_here' &&
-      url.includes('supabase') &&
+      (url.includes('supabase') || url.includes('localhost')) &&
       anonKey.length > 20
     );
   }
@@ -83,7 +83,8 @@ class SupabaseManager {
 
     this.config = this.detectConfiguration();
 
-    if (this.config.isConfigured) {
+    // Always use mock client in demo mode to prevent network errors
+    if (this.config.isConfigured && !this.config.url.includes('localhost')) {
       try {
         this.client = createClient<Database>(this.config.url, this.config.anonKey, {
           auth: {
@@ -103,6 +104,7 @@ class SupabaseManager {
         this.client = this.createMockClient();
       }
     } else {
+      console.log('🔧 Using mock Supabase client (demo mode)');
       this.client = this.createMockClient();
     }
 
@@ -141,20 +143,55 @@ class SupabaseManager {
 
   // Create comprehensive mock client
   private createMockClient() {
-    console.log('🔧 Creating mock Supabase client for development');
+    console.log('🔧 Creating mock Supabase client');
     
     return {
       auth: {
-        signUp: async () => ({ 
-          data: { user: null, session: null }, 
-          error: { message: 'Mock mode - Supabase not configured' } 
+        signUp: async (credentials: any) => ({ 
+          data: { 
+            user: {
+              id: 'mock-user-id',
+              email: credentials.email,
+              created_at: new Date().toISOString()
+            }, 
+            session: {
+              access_token: 'mock-token',
+              user: {
+                id: 'mock-user-id',
+                email: credentials.email
+              }
+            }
+          }, 
+          error: null
         }),
-        signInWithPassword: async () => ({ 
-          data: { user: null, session: null }, 
-          error: { message: 'Mock mode - Supabase not configured' } 
+        signInWithPassword: async (credentials: any) => ({ 
+          data: { 
+            user: {
+              id: 'mock-user-id',
+              email: credentials.email,
+              created_at: new Date().toISOString()
+            }, 
+            session: {
+              access_token: 'mock-token',
+              user: {
+                id: 'mock-user-id',
+                email: credentials.email
+              }
+            }
+          }, 
+          error: null
         }),
         signOut: async () => ({ error: null }),
-        getUser: async () => ({ data: { user: null }, error: null }),
+        getUser: async () => ({ 
+          data: { 
+            user: {
+              id: 'mock-user-id',
+              email: 'demo@example.com',
+              created_at: new Date().toISOString()
+            }
+          }, 
+          error: null 
+        }),
         getSession: async () => ({ data: { session: null }, error: null }),
         onAuthStateChange: () => ({
           data: { subscription: { unsubscribe: () => {} } }
@@ -162,28 +199,38 @@ class SupabaseManager {
       },
       from: (table: string) => ({
         select: () => ({
-          eq: () => Promise.resolve({ data: [], error: null }),
-          order: () => Promise.resolve({ data: [], error: null }),
-          single: () => Promise.resolve({ data: null, error: { message: 'Mock mode' } }),
-          limit: () => Promise.resolve({ data: [], error: null }),
-          range: () => Promise.resolve({ data: [], error: null }),
-          gte: () => Promise.resolve({ data: [], error: null }),
-          lte: () => Promise.resolve({ data: [], error: null })
+          eq: () => ({
+            order: () => Promise.resolve({ data: this.getMockData(table), error: null }),
+            single: () => Promise.resolve({ data: this.getMockData(table)[0] || null, error: null }),
+            limit: () => Promise.resolve({ data: this.getMockData(table), error: null })
+          }),
+          order: () => Promise.resolve({ data: this.getMockData(table), error: null }),
+          single: () => Promise.resolve({ data: this.getMockData(table)[0] || null, error: null }),
+          limit: () => Promise.resolve({ data: this.getMockData(table), error: null }),
+          range: () => Promise.resolve({ data: this.getMockData(table), error: null }),
+          gte: () => Promise.resolve({ data: this.getMockData(table), error: null }),
+          lte: () => Promise.resolve({ data: this.getMockData(table), error: null })
         }),
         insert: () => ({
           select: () => ({
-            single: () => Promise.resolve({ data: null, error: { message: 'Mock mode' } })
+            single: () => Promise.resolve({ 
+              data: { id: 'mock-id', created_at: new Date().toISOString() }, 
+              error: null 
+            })
           })
         }),
         update: () => ({
           eq: () => ({
             select: () => ({
-              single: () => Promise.resolve({ data: null, error: { message: 'Mock mode' } })
+              single: () => Promise.resolve({ 
+                data: { id: 'mock-id', updated_at: new Date().toISOString() }, 
+                error: null 
+              })
             })
           })
         }),
         delete: () => ({
-          eq: () => Promise.resolve({ data: null, error: { message: 'Mock mode' } })
+          eq: () => Promise.resolve({ data: null, error: null })
         })
       }),
       channel: () => ({
@@ -191,9 +238,41 @@ class SupabaseManager {
         subscribe: () => ({ unsubscribe: () => {} })
       }),
       functions: {
-        invoke: async () => ({ data: null, error: { message: 'Mock mode' } })
+        invoke: async () => ({ data: { success: true, message: 'Mock response' }, error: null })
       }
     };
+  }
+
+  // Get mock data for different tables
+  private getMockData(table: string) {
+    switch (table) {
+      case 'products':
+        return [
+          {
+            id: 'mock-product-1',
+            name: 'Demo Sourdough Bread',
+            description: 'Mock product for demonstration',
+            price: 8.50,
+            category: 'bread',
+            image_url: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg',
+            is_available: true,
+            is_special: false
+          }
+        ];
+      case 'testimonials':
+        return [
+          {
+            id: 'mock-testimonial-1',
+            name: 'Demo Customer',
+            content: 'This is a demo testimonial for the mock client.',
+            rating: 5,
+            is_approved: true,
+            created_at: new Date().toISOString()
+          }
+        ];
+      default:
+        return [];
+    }
   }
 
   // Auto-setup for common hosting platforms
