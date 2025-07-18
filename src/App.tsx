@@ -19,6 +19,8 @@ import FAQ from './pages/FAQ';
 import Press from './pages/Press';
 import Returns from './pages/Returns';
 import Shipping from './pages/Shipping';
+import Orders from './pages/Orders';
+import Profile from './pages/Profile';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,7 +55,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <div className="min-h-screen bg-white dark:bg-gray-900">
           <Header onAuthClick={openAuthModal} />
           <main>
@@ -62,6 +64,8 @@ function App() {
               <Route path="/menu" element={<Menu />} />
               <Route path="/about" element={<About />} />
               <Route path="/order" element={<Order />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/events" element={<Events />} />
               <Route path="/contact" element={<Contact />} />
