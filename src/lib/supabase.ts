@@ -23,7 +23,16 @@ export const auth = {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: userData }
+        options: { 
+          data: {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            phone: userData.phone,
+            address: userData.address,
+            city: userData.city,
+            zipCode: userData.zipCode
+          }
+        }
       });
       return { data, error };
     } catch (err) {
