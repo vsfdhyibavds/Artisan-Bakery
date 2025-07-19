@@ -142,21 +142,66 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   initialize: async () => {
     try {
+      set({ loading: true });
       const { user } = await auth.getCurrentUser();
       
       if (user) {
-        const { data: customer } = await db.getCustomer(user.id);
+        // Try to get customer data, but don't fail if it doesn't exist
+        const { data: customer, error } = await db.getCustomer(user.id);
+        
+        // If no customer profile exists, create a basic one from user data
+        if (!customer && !error) {
+          const userData = user.user_metadata || {};
+          const basicCustomer = {
+            id: user.id,
+            first_name: userData.firstName || userData.first_name || user.email?.split('@')[0] || 'User',
+            last_name: userData.lastName || userData.last_name || '',
+            email: user.email || '',
+            phone: userData.phone || '',
+            address: userData.address || null,
+            city: userData.city || null,
+            zip_code: userData.zipCode || null,
+          };
+          
+          // Try to create customer profile
+          const { data: newCustomer } = await db.createCustomer(basicCustomer);
+          
+          set({ 
+            user,
+            customer: newCustomer || basicCustomer,
+            loading: false
+          });
+        } else {
+          set({ 
+            user,
+            customer: customer || {
+              id: user.id,
+              first_name: user.email?.split('@')[0] || 'User',
+              last_name: '',
+              email: user.email || '',
+              phone: '',
+              address: null,
+              city: null,
+              zip_code: null,
+            },
+            loading: false
+          });
+        }
+      } else {
         set({ 
-          user,
-          customer: customer || null,
+          user: null,
+          customer: null,
           loading: false
         });
-      } else {
-        set({ loading: false });
       }
     } catch (error) {
       console.error('Auth initialization error:', error);
-      set({ loading: false });
+      // In case of error, still try to show something useful
+      set({ 
+        user: null,
+        customer: null,
+        loading: false 
+      });
     }
   },
 }));

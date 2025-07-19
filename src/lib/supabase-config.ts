@@ -152,13 +152,15 @@ class SupabaseManager {
             user: {
               id: 'mock-user-id',
               email: credentials.email,
-              created_at: new Date().toISOString()
+              created_at: new Date().toISOString(),
+              user_metadata: credentials.options?.data || {}
             }, 
             session: {
               access_token: 'mock-token',
               user: {
                 id: 'mock-user-id',
-                email: credentials.email
+                email: credentials.email,
+                user_metadata: credentials.options?.data || {}
               }
             }
           }, 
@@ -169,13 +171,22 @@ class SupabaseManager {
             user: {
               id: 'mock-user-id',
               email: credentials.email,
-              created_at: new Date().toISOString()
+              created_at: new Date().toISOString(),
+              user_metadata: {
+                firstName: 'Demo',
+                lastName: 'User',
+                phone: '(555) 123-4567'
+              }
             }, 
             session: {
               access_token: 'mock-token',
               user: {
                 id: 'mock-user-id',
-                email: credentials.email
+                email: credentials.email,
+                user_metadata: {
+                  firstName: 'Demo',
+                  lastName: 'User'
+                }
               }
             }
           }, 
@@ -187,7 +198,12 @@ class SupabaseManager {
             user: {
               id: 'mock-user-id',
               email: 'demo@example.com',
-              created_at: new Date().toISOString()
+              created_at: new Date().toISOString(),
+              user_metadata: {
+                firstName: 'Demo',
+                lastName: 'User',
+                phone: '(555) 123-4567'
+              }
             }
           }, 
           error: null 
@@ -246,6 +262,21 @@ class SupabaseManager {
   // Get mock data for different tables
   private getMockData(table: string) {
     switch (table) {
+      case 'customers':
+        return [
+          {
+            id: 'mock-user-id',
+            first_name: 'Demo',
+            last_name: 'User',
+            email: 'demo@example.com',
+            phone: '(555) 123-4567',
+            address: '123 Demo Street',
+            city: 'Demo City',
+            zip_code: '12345',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ];
       case 'products':
         return [
           {
