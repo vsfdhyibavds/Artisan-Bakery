@@ -38,7 +38,7 @@ class SupabaseManager {
         anonKey: localStorage.getItem('supabase_anon_key'),
         source: 'localStorage'
       },
-      // 3. Demo/Development instance (fallback)
+      // 3. Demo/Development instance (fallback, safe demo values only)
       {
         url: 'https://localhost:54321',
         anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOEoJeXxjNx5kTHAHu_j6QIBVhko_WqJzSs8',
@@ -57,7 +57,7 @@ class SupabaseManager {
       }
     }
 
-    // If no valid config found, return demo config
+    // If no valid config found, return demo config (safe demo values only)
     console.warn('⚠️ No valid Supabase configuration found, using demo mode');
     return {
       url: 'https://localhost:54321',
@@ -68,9 +68,9 @@ class SupabaseManager {
 
   private isValidConfig(url?: string | null, anonKey?: string | null): boolean {
     return !!(
-      url && 
-      anonKey && 
-      url !== 'your_supabase_url_here' && 
+      url &&
+      anonKey &&
+      url !== 'your_supabase_url_here' &&
       anonKey !== 'your_supabase_anon_key_here' &&
       (url.includes('supabase') || url.includes('localhost')) &&
       anonKey.length > 20
@@ -143,61 +143,24 @@ class SupabaseManager {
 
   // Create comprehensive mock client
   private createMockClient() {
-    console.log('🔧 Creating mock Supabase client');
-    
+    console.log('🔧 Creating mock Supabase client for development');
+
     return {
       auth: {
-        signUp: async (credentials: any) => ({ 
-          data: { 
-            user: {
-              id: 'mock-user-id',
-              email: credentials.email,
-              created_at: new Date().toISOString(),
-              user_metadata: credentials.options?.data || {}
-            }, 
-            session: {
-              access_token: 'mock-token',
-              user: {
-                id: 'mock-user-id',
-                email: credentials.email,
-                user_metadata: credentials.options?.data || {}
-              }
-            }
-          }, 
-          error: null
+        signUp: async () => ({
+          data: { user: null, session: null },
+          error: { message: 'Mock mode - Supabase not configured' }
         }),
-        signInWithPassword: async (credentials: any) => ({ 
-          data: { 
-            user: {
-              id: 'mock-user-id',
-              email: credentials.email,
-              created_at: new Date().toISOString(),
-              user_metadata: {
-                firstName: 'Demo',
-                lastName: 'User',
-                phone: '(555) 123-4567'
-              }
-            }, 
-            session: {
-              access_token: 'mock-token',
-              user: {
-                id: 'mock-user-id',
-                email: credentials.email,
-                user_metadata: {
-                  firstName: 'Demo',
-                  lastName: 'User'
-                }
-              }
-            }
-          }, 
-          error: null
+        signInWithPassword: async () => ({
+          data: { user: null, session: null },
+          error: { message: 'Mock mode - Supabase not configured' }
         }),
         signOut: async () => ({ error: null }),
-        getUser: async () => ({ 
-          data: { 
+        getUser: async () => ({
+          data: {
             user: null
-          }, 
-          error: null 
+          },
+          error: null
         }),
         getSession: async () => ({ data: { session: null }, error: null }),
         onAuthStateChange: () => ({
@@ -220,18 +183,18 @@ class SupabaseManager {
         }),
         insert: () => ({
           select: () => ({
-            single: () => Promise.resolve({ 
-              data: { id: 'mock-id', created_at: new Date().toISOString() }, 
-              error: null 
+            single: () => Promise.resolve({
+              data: { id: 'mock-id', created_at: new Date().toISOString() },
+              error: null
             })
           })
         }),
         update: () => ({
           eq: () => ({
             select: () => ({
-              single: () => Promise.resolve({ 
-                data: { id: 'mock-id', updated_at: new Date().toISOString() }, 
-                error: null 
+              single: () => Promise.resolve({
+                data: { id: 'mock-id', updated_at: new Date().toISOString() },
+                error: null
               })
             })
           })
@@ -300,7 +263,7 @@ class SupabaseManager {
   // Auto-setup for common hosting platforms
   autoSetupForPlatform() {
     const platform = this.detectPlatform();
-    
+
     switch (platform) {
       case 'netlify':
         this.setupNetlifyIntegration();

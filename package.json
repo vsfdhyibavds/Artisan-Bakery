@@ -16,7 +16,7 @@
     "setup": "chmod +x scripts/setup.sh && ./scripts/setup.sh"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/supabase-js": "^2.52.0",
     "@tanstack/react-query": "^5.17.9",
     "clsx": "^2.1.0",
     "date-fns": "^3.0.6",
@@ -26,8 +26,8 @@
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.4",
     "react-hook-form": "^7.49.2",
-    "react-router-dom": "^6.21.1",
     "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.21.1",
     "tailwind-merge": "^2.2.0",
     "zustand": "^4.4.7"
   },
