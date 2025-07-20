@@ -195,16 +195,7 @@ class SupabaseManager {
         signOut: async () => ({ error: null }),
         getUser: async () => ({ 
           data: { 
-            user: {
-              id: 'mock-user-id',
-              email: 'demo@example.com',
-              created_at: new Date().toISOString(),
-              user_metadata: {
-                firstName: 'Demo',
-                lastName: 'User',
-                phone: '(555) 123-4567'
-              }
-            }
+            user: null
           }, 
           error: null 
         }),
