@@ -14,6 +14,7 @@ export const configureSupabase = (url: string, anonKey: string) => {
 
 export const getSupabaseStatus = () => {
   return supabaseManager.getConfigurationStatus();
+}
 
 // Enhanced auth helpers with better error handling
 export const auth = {
