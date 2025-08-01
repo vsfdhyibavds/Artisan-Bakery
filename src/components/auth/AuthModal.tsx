@@ -34,37 +34,51 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
   const [resetLoading, setResetLoading] = useState(false);
+  const [signInError, setSignInError] = useState<string | null>(null);
+  const [signUpError, setSignUpError] = useState<string | null>(null);
 
   const signInForm = useForm<SignInFormData>();
   const signUpForm = useForm<SignUpFormData>();
   const resetForm = useForm<{ email: string }>();
 
   const handleSignIn = async (data: SignInFormData) => {
-    const success = await signIn(data.email, data.password);
-    if (success) {
-      onClose();
-      signInForm.reset();
+    setSignInError(null);
+    try {
+      const success = await signIn(data.email, data.password);
+      if (success) {
+        onClose();
+        signInForm.reset();
+      } else {
+        setSignInError('Invalid email or password.');
+      }
+    } catch (err: any) {
+      setSignInError(err.message || 'Sign in failed.');
     }
   };
 
   const handleSignUp = async (data: SignUpFormData) => {
+    setSignUpError(null);
     if (data.password !== data.confirmPassword) {
       signUpForm.setError('confirmPassword', { message: 'Passwords do not match' });
       return;
     }
-
-    const success = await signUp(data.email, data.password, {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      phone: data.phone,
-      address: data.address,
-      city: data.city,
-      zipCode: data.zipCode,
-    });
-
-    if (success) {
-      onClose();
-      signUpForm.reset();
+    try {
+      const success = await signUp(data.email, data.password, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        zipCode: data.zipCode,
+      });
+      if (success) {
+        onClose();
+        signUpForm.reset();
+      } else {
+        setSignUpError('Sign up failed.');
+      }
+    } catch (err: any) {
+      setSignUpError(err.message || 'Sign up failed.');
     }
   };
 
@@ -171,6 +185,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                   )}
                 </div>
 
+                {signInError && (
+                  <p className="text-red-500 text-sm mt-2">{signInError}</p>
+                )}
                 <button
                   type="submit"
                   className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors"
@@ -326,6 +343,9 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                   </div>
                 </div>
 
+                {signUpError && (
+                  <p className="text-red-500 text-sm mt-2">{signUpError}</p>
+                )}
                 <button
                   type="submit"
                   className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors"

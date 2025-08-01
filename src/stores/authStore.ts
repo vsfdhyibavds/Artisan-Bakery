@@ -32,13 +32,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signUp: async (email: string, password: string, userData: any) => {
     try {
+      // Use supabase.ts helper, which sends profile data in options.data
       const { data, error } = await auth.signUp(email, password, userData);
-      
       if (error) {
         toast.error(error.message);
         return false;
       }
-
       if (data.user) {
         // Create customer profile
         const customerData = {
@@ -51,18 +50,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           city: userData.city,
           zip_code: userData.zipCode,
         };
-
         const { error: customerError } = await db.createCustomer(customerData);
-        
         if (customerError) {
           console.error('Error creating customer profile:', customerError);
         }
-
         set({ user: data.user });
         toast.success('Account created successfully!');
         return true;
       }
-
       return false;
     } catch (error) {
       console.error('Sign up error:', error);
@@ -73,26 +68,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signIn: async (email: string, password: string) => {
     try {
+      // Use supabase.ts helper
       const { data, error } = await auth.signIn(email, password);
-      
       if (error) {
         toast.error(error.message);
         return false;
       }
-
       if (data.user) {
         // Fetch customer profile
         const { data: customer } = await db.getCustomer(data.user.id);
-        
-        set({ 
+        set({
           user: data.user,
           customer: customer || null
         });
-        
         toast.success('Welcome back!');
         return true;
       }
-
       return false;
     } catch (error) {
       console.error('Sign in error:', error);
@@ -104,7 +95,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signOut: async () => {
     try {
       const { error } = await auth.signOut();
-      
+
       if (error) {
         toast.error(error.message);
         return;
@@ -124,7 +115,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (!user) return false;
 
       const { data, error } = await db.updateCustomer(user.id, userData);
-      
+
       if (error) {
         toast.error('Failed to update profile');
         return false;
@@ -143,7 +134,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   initialize: async () => {
     try {
       set({ loading: true });
-      
+
       // For demo mode, automatically set up a demo user
       const supabaseStatus = getSupabaseStatus();
       if (!supabaseStatus.isConfigured) {
@@ -158,7 +149,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             phone: '(555) 123-4567'
           }
         };
-        
+
         const demoCustomer = {
           id: 'demo-user-id',
           first_name: 'Demo',
@@ -171,21 +162,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         };
-        
-        set({ 
+
+        set({
           user: demoUser as any,
           customer: demoCustomer,
           loading: false
         });
         return;
       }
-      
+
       const { user } = await auth.getCurrentUser();
-      
+
       if (user) {
         // Try to get customer data, but don't fail if it doesn't exist
         const { data: customer, error } = await db.getCustomer(user.id);
-        
+
         // If no customer profile exists, create a basic one from user data
         if (!customer && !error) {
           const userData = user.user_metadata || {};
@@ -199,17 +190,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             city: userData.city || null,
             zip_code: userData.zipCode || null,
           };
-          
+
           // Try to create customer profile
           const { data: newCustomer } = await db.createCustomer(basicCustomer);
-          
-          set({ 
+
+          set({
             user,
             customer: newCustomer || basicCustomer,
             loading: false
           });
         } else {
-          set({ 
+          set({
             user,
             customer: customer || {
               id: user.id,
@@ -225,7 +216,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           });
         }
       } else {
-        set({ 
+        set({
           user: null,
           customer: null,
           loading: false
@@ -234,10 +225,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       console.error('Auth initialization error:', error);
       // In case of error, still try to show something useful
-      set({ 
+      set({
         user: null,
         customer: null,
-        loading: false 
+        loading: false
       });
     }
   },
