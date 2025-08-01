@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, User, Phone, MapPin } from 'lucide-react';
+import { X, Mail, Lock, User, Phone } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../../stores/authStore';
 
@@ -28,11 +29,15 @@ interface SignUpFormData {
 }
 
 export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModalProps) {
-  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
+  const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>(initialMode);
   const { signIn, signUp } = useAuthStore();
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetLoading, setResetLoading] = useState(false);
 
   const signInForm = useForm<SignInFormData>();
   const signUpForm = useForm<SignUpFormData>();
+  const resetForm = useForm<{ email: string }>();
 
   const handleSignIn = async (data: SignInFormData) => {
     const success = await signIn(data.email, data.password);
@@ -65,6 +70,25 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
 
   if (!isOpen) return null;
 
+  const handlePasswordReset = async (data: { email: string }) => {
+    setResetLoading(true);
+    setResetError(null);
+    try {
+      // Supabase password reset
+      const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+        redirectTo: window.location.origin + '/reset-password',
+      });
+      if (error) {
+        setResetError(error.message);
+      } else {
+        setResetEmailSent(true);
+      }
+    } catch (err: any) {
+      setResetError('Failed to send reset email.');
+    }
+    setResetLoading(false);
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -96,7 +120,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
         {/* Content */}
         <div className="p-6">
           <AnimatePresence mode="wait">
-            {mode === 'signin' ? (
+            {mode === 'signin' && (
               <motion.form
                 key="signin"
                 initial={{ opacity: 0, x: -20 }}
@@ -112,7 +136,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
-                      {...signInForm.register('email', { 
+                      {...signInForm.register('email', {
                         required: 'Email is required',
                         pattern: {
                           value: /^\S+@\S+$/i,
@@ -154,18 +178,28 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                   Sign In
                 </button>
 
-                <p className="text-center text-gray-600 dark:text-gray-400">
-                  Don't have an account?{' '}
+                <div className="flex flex-col items-center gap-2 mt-2">
+                  <p className="text-center text-gray-600 dark:text-gray-400">
+                    Don't have an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setMode('signup')}
+                      className="text-primary-600 dark:text-primary-400 hover:underline"
+                    >
+                      Sign up
+                    </button>
+                  </p>
                   <button
                     type="button"
-                    onClick={() => setMode('signup')}
-                    className="text-primary-600 dark:text-primary-400 hover:underline"
+                    onClick={() => setMode('reset')}
+                    className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
                   >
-                    Sign up
+                    Forgot Password?
                   </button>
-                </p>
+                </div>
               </motion.form>
-            ) : (
+            )}
+            {mode === 'signup' && (
               <motion.form
                 key="signup"
                 initial={{ opacity: 0, x: 20 }}
@@ -216,7 +250,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
-                      {...signUpForm.register('email', { 
+                      {...signUpForm.register('email', {
                         required: 'Email is required',
                         pattern: {
                           value: /^\S+@\S+$/i,
@@ -259,7 +293,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                       <input
-                        {...signUpForm.register('password', { 
+                        {...signUpForm.register('password', {
                           required: 'Password is required',
                           minLength: {
                             value: 6,
@@ -309,6 +343,62 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'signin' }: A
                     Sign in
                   </button>
                 </p>
+              </motion.form>
+            )}
+            {mode === 'reset' && (
+              <motion.form
+                key="reset"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                onSubmit={resetForm.handleSubmit(handlePasswordReset)}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Enter your email to reset password
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      {...resetForm.register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^\S+@\S+$/i,
+                          message: 'Invalid email address'
+                        }
+                      })}
+                      type="email"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      placeholder="Enter your email"
+                      disabled={resetLoading || resetEmailSent}
+                    />
+                  </div>
+                  {resetForm.formState.errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{resetForm.formState.errors.email.message}</p>
+                  )}
+                </div>
+                {resetError && (
+                  <p className="text-red-500 text-sm mt-1">{resetError}</p>
+                )}
+                {resetEmailSent ? (
+                  <p className="text-green-600 text-sm mt-2">Password reset email sent! Check your inbox.</p>
+                ) : (
+                  <button
+                    type="submit"
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                    disabled={resetLoading}
+                  >
+                    {resetLoading ? 'Sending...' : 'Send Reset Email'}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setMode('signin')}
+                  className="w-full mt-2 text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  Back to Sign In
+                </button>
               </motion.form>
             )}
           </AnimatePresence>

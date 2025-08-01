@@ -1,10 +1,11 @@
-import React from 'react';
+// ...existing code...
+import ProductManagement from './ProductManagement';
+import CategoryManagement from './CategoryManagement';
 import { motion } from 'framer-motion';
-import { 
-  ShoppingCart, 
-  Users, 
-  DollarSign, 
-  TrendingUp,
+import {
+  ShoppingCart,
+  Users,
+  DollarSign,
   Package,
   AlertTriangle,
   Calendar,
@@ -19,13 +20,12 @@ const AdminDashboard = () => {
     activeCustomers: 156,
     avgRating: 4.8,
     pendingOrders: 8,
-    lowStockItems: 3
+    lowStockItems: 3,
   };
-
   const recentOrders = [
     { id: '001', customer: 'Sarah Johnson', total: 45.99, status: 'preparing', time: '10:30 AM' },
     { id: '002', customer: 'Mike Chen', total: 23.50, status: 'ready', time: '10:15 AM' },
-    { id: '003', customer: 'Emily Davis', total: 67.25, status: 'confirmed', time: '9:45 AM' }
+    { id: '003', customer: 'Emily Davis', total: 67.25, status: 'confirmed', time: '9:45 AM' },
   ];
 
   const getStatusColor = (status: string) => {
@@ -187,7 +187,12 @@ const AdminDashboard = () => {
           </motion.div>
         </div>
       </div>
+    {/* Product & Category Management Sections */}
+    <div className="max-w-7xl mx-auto mt-12 space-y-12">
+      <ProductManagement />
+      <CategoryManagement />
     </div>
+  </div>
   );
 };
 
