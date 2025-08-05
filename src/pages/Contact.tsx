@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Calendar } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -27,18 +27,18 @@ const contactInfo = [
     icon: MapPin,
     title: 'Visit Us',
     details: [
-      '123 Baker Street',
-      'Downtown District',
-      'City, State 12345'
+      'Community Road',
+      'Syokimau',
+      'Nairobi, Kenya'
     ]
   },
   {
     icon: Phone,
     title: 'Call Us',
     details: [
-      'Main: (555) 123-BAKE',
-      'Catering: (555) 123-CAKE',
-      'Events: (555) 123-EVENT'
+      'Main: (254) 7943878-BAKE',
+      'Catering: (254) 7943878-CAKE',
+      'Events: (254) 7879438878-EVENT'
     ]
   },
   {
@@ -67,13 +67,13 @@ export default function Contact() {
 
   const onSubmit = async (data: ContactForm) => {
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     console.log('Contact form submitted:', data);
     alert('Thank you for your message! We will get back to you within 24 hours.');
-    
+
     reset();
     setIsSubmitting(false);
   };
@@ -176,7 +176,7 @@ export default function Contact() {
                       Email *
                     </label>
                     <input
-                      {...register('email', { 
+                      {...register('email', {
                         required: 'Email is required',
                         pattern: {
                           value: /^\S+@\S+$/i,
@@ -334,7 +334,7 @@ export default function Contact() {
                   Response Time
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  We typically respond to all inquiries within 24 hours during business days. 
+                  We typically respond to all inquiries within 24 hours during business days.
                   For urgent matters, please call us directly.
                 </p>
               </div>
