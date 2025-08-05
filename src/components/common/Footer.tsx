@@ -1,11 +1,10 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  ShoppingBag, 
-  MapPin, 
-  Phone, 
-  Mail, 
+import {
+  ShoppingBag,
+  MapPin,
+  Phone,
+  Mail,
   Clock,
   Facebook,
   Instagram,
@@ -51,7 +50,7 @@ export default function Footer() {
               Stay Fresh with Our Newsletter
             </h3>
             <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-              Get the latest updates on new products, special offers, and baking tips 
+              Get the latest updates on new products, special offers, and baking tips
               delivered straight to your inbox.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
@@ -82,9 +81,9 @@ export default function Footer() {
                 <p className="text-sm text-gray-400">Fresh Baked Daily</p>
               </div>
             </Link>
-            
+
             <p className="text-gray-400 mb-6 max-w-md">
-              Serving the community with fresh, artisanal baked goods since 1985. 
+              Serving the community with fresh, artisanal baked goods since 1985.
               Made with love, traditional techniques, and the finest ingredients.
             </p>
 
@@ -179,7 +178,7 @@ export default function Footer() {
                 );
               })}
             </div>
-            
+
             <div className="flex items-center text-gray-400 text-sm">
               <span>Made with</span>
               <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" />

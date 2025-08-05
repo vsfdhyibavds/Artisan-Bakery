@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
 import { Edit, Save, X, ImagePlus, KeyRound, Shield } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../stores/authStore';
-// import useOrders from hook if available, else mock for now
-const useOrders = () => ({ orders: [] });
+
 function PasswordChange({ onChange }: { onChange: () => void }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<{ oldPassword: string; newPassword: string }>();
   const onSubmit = async () => {
@@ -36,6 +35,28 @@ interface ProfileFormData {
   zipCode?: string;
 }
 
+function useOrders(userId: string | null) {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!userId) return;
+    setLoading(true);
+    supabase
+      .from('orders')
+      .select('*')
+      .eq('customer_id', userId)
+      .order('created_at', { ascending: false })
+      .then((response: { data: any[]; error: any }) => {
+        const { data, error } = response;
+        if (!error && data) setOrders(data);
+        setLoading(false);
+      });
+  }, [userId]);
+
+  return { orders, loading };
+}
+
 export default function Profile() {
   const { user, customer, updateProfile } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
@@ -54,7 +75,7 @@ export default function Profile() {
       zipCode: customer?.zip_code || '',
     }
   });
-  const { orders } = useOrders();
+  const { orders, loading } = useOrders(user?.id ?? null);
 
   if (!user) {
     return (
@@ -344,24 +365,26 @@ export default function Profile() {
               {/* Password Change Section */}
               {showPasswordChange && <PasswordChange onChange={() => setShowPasswordChange(false)} />}
               {/* Order History Section */}
-              <div className="mt-12">
-                <h3 className="text-lg font-semibold mb-4">Order History</h3>
-                {orders && orders.length > 0 ? (
-                  <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {orders.map((order: any) => (
-                      <li key={order.id} className="py-4 flex justify-between items-center">
-                        <div>
-                          <span className="font-semibold">Order #{order.id}</span> - {order.status}
-                          <div className="text-xs text-gray-500">{new Date(order.created_at).toLocaleDateString()}</div>
-                        </div>
-                        <button className="bg-primary-600 text-white px-3 py-1 rounded text-sm">Reorder</button>
+              {!loading && orders.length > 0 && (
+                <section className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Order History</h3>
+                  <ul>
+                    {orders.map(order => (
+                      <li key={order.id} className="border-b py-2 flex justify-between items-center">
+                        <span>
+                          #{order.id} - {order.created_at?.slice(0, 10)} - ${order.total_price}
+                        </span>
+                        <button
+                          className="bg-blue-600 text-white px-3 py-1 rounded"
+                          onClick={() => {/* TODO: Implement reorder logic */}}
+                        >
+                          Reorder
+                        </button>
                       </li>
                     ))}
                   </ul>
-                ) : (
-                  <p className="text-gray-500">No orders found.</p>
-                )}
-              </div>
+                </section>
+              )}
             </div>
           </div>
         </div>

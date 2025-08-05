@@ -36,8 +36,8 @@ const contactInfo = [
     icon: Phone,
     title: 'Call Us',
     details: [
-      'Main: (254) 7943878-BAKE',
-      'Catering: (254) 7943878-CAKE',
+      'Main: (254) 7879438878-BAKE',
+      'Catering: (254) 7879438878-CAKE',
       'Events: (254) 7879438878-EVENT'
     ]
   },
@@ -199,7 +199,7 @@ export default function Contact() {
                       {...register('phone')}
                       type="tel"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      placeholder="(555) 123-4567"
+                      placeholder="(254) 123-45678"
                     />
                   </div>
                 </div>
@@ -290,7 +290,7 @@ export default function Contact() {
                       Interactive map would be here
                     </p>
                     <p className="text-sm text-gray-400 dark:text-gray-500">
-                      123 Baker Street, Downtown District
+                      Community Road, Syokimau
                     </p>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export default function Contact() {
                     Visit Our Bakery
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Located in the heart of downtown, we're easy to find and always happy to welcome visitors.
+                    Located in the heart of Syokimau, we're easy to find and always happy to welcome visitors.
                   </p>
                   <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
                     Get Directions

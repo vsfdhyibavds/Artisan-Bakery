@@ -47,7 +47,7 @@ export default function SEOHead({
       {/* Additional Meta Tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="theme-color" content="#a18072" />
-      
+
       {/* Structured Data */}
       <script type="application/ld+json">
         {JSON.stringify({
@@ -56,14 +56,14 @@ export default function SEOHead({
           "name": "Artisan Bakery",
           "description": description,
           "url": "https://artisanbakery.com",
-          "telephone": "(555) 123-BAKE",
+          "telephone": "(+254) 7879438878-BAKE",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "123 Baker Street",
-            "addressLocality": "Downtown District",
-            "addressRegion": "State",
+            "streetAddress": "Community Road",
+            "addressLocality": "Syokimau",
+            "addressRegion": "Nairobi",
             "postalCode": "12345",
-            "addressCountry": "US"
+            "addressCountry": "KE"
           },
           "openingHours": [
             "Mo-Fr 07:00-19:00",

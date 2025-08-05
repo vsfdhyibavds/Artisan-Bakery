@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ShoppingBag, Phone, MapPin, User, LogOut, Database } from 'lucide-react';
@@ -75,13 +75,13 @@ export default function Header({ onAuthClick }: HeaderProps) {
             <div className="flex items-center gap-1">
               <Phone className="w-4 h-4" />
               <a href="tel:5551234BAKE" className="hover:text-accent-300 transition-colors">
-                (555) 123-BAKE
+                (+254) 7879438878-BAKE
               </a>
             </div>
             <div className="hidden sm:flex items-center gap-1">
               <MapPin className="w-4 h-4" />
               <Link to="/contact" className="hover:text-accent-300 transition-colors">
-                123 Baker Street, Downtown
+                Community Road, Syokimau
               </Link>
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
             {/* Right Side Actions */}
             <div className="hidden md:flex items-center space-x-4">
               <CartIcon onClick={handleCartClick} />
-              
+
               {user ? (
                 <div className="relative">
                   <button
@@ -163,7 +163,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                       {customer?.first_name || user?.user_metadata?.firstName || user?.email?.split('@')[0] || 'Account'}
                     </span>
                   </button>
-                  
+
                   <AnimatePresence>
                     {showUserMenu && (
                       <motion.div
@@ -211,7 +211,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   </button>
                 </div>
               )}
-              
+
               <button
                 onClick={handleOrderNowClick}
                 className="bg-accent-500 hover:bg-accent-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
@@ -253,7 +253,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     {item.name}
                   </Link>
                 ))}
-                
+
                 {user ? (
                   <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -294,7 +294,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     </button>
                   </div>
                 )}
-                
+
                 <button
                   onClick={handleOrderNowClick}
                   className="block w-full bg-accent-500 hover:bg-accent-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition-colors"
@@ -308,9 +308,9 @@ export default function Header({ onAuthClick }: HeaderProps) {
       </header>
 
       {/* Supabase Setup Modal */}
-      <SupabaseSetup 
-        isOpen={showSupabaseSetup} 
-        onClose={() => setShowSupabaseSetup(false)} 
+      <SupabaseSetup
+        isOpen={showSupabaseSetup}
+        onClose={() => setShowSupabaseSetup(false)}
       />
     </>
   );

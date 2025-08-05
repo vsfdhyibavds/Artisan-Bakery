@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '../../stores/cartStore';
 import { motion, AnimatePresence } from 'framer-motion';
