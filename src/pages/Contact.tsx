@@ -36,9 +36,9 @@ const contactInfo = [
     icon: Phone,
     title: 'Call Us',
     details: [
-      'Main: (254) 7879438878-BAKE',
-      'Catering: (254) 7879438878-CAKE',
-      'Events: (254) 7879438878-EVENT'
+      'Main: (+254) 7879438878-BAKE',
+      'Catering: (+254) 7879438878-CAKE',
+      'Events: (+254) 7879438878-EVENT'
     ]
   },
   {
@@ -284,15 +284,16 @@ export default function Contact() {
               {/* Map Placeholder */}
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                 <div className="h-64 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Interactive map would be here
-                    </p>
-                    <p className="text-sm text-gray-400 dark:text-gray-500">
-                      Community Road, Syokimau
-                    </p>
-                  </div>
+                  <iframe
+                    title="Artisan Bakery Location"
+                    src="https://www.google.com/maps?q=Community+Road,+Syokimau,+Kenya&output=embed"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, minHeight: '16rem', borderRadius: '0.75rem' }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
                 </div>
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -301,7 +302,15 @@ export default function Contact() {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     Located in the heart of Syokimau, we're easy to find and always happy to welcome visitors.
                   </p>
-                  <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                  <button
+                    className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                    onClick={() =>
+                      window.open(
+                        'https://www.google.com/maps/dir/?api=1&destination=Community+Road,+Syokimau,+Kenya',
+                        '_blank'
+                      )
+                    }
+                  >
                     Get Directions
                   </button>
                 </div>
@@ -313,15 +322,24 @@ export default function Contact() {
                   Quick Actions
                 </h3>
                 <div className="space-y-3">
-                  <button className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <button
+                    className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => window.open('https://calendly.com/your-bakery/consultation', '_blank')}
+                  >
                     <Calendar className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <span className="text-gray-900 dark:text-white">Schedule a Consultation</span>
                   </button>
-                  <button className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <button
+                    className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => window.open('tel:+2547879438878')}
+                  >
                     <Phone className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <span className="text-gray-900 dark:text-white">Request a Call Back</span>
                   </button>
-                  <button className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <button
+                    className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => window.open('mailto:hello@artisanbakery.com?subject=Quote%20Request')}
+                  >
                     <Mail className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <span className="text-gray-900 dark:text-white">Email Quote Request</span>
                   </button>

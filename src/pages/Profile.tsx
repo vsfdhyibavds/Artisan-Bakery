@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
 import { Edit, Save, X, ImagePlus, KeyRound, Shield } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../stores/authStore';
+import { useCartStore } from '../stores/cartStore';
+import toast from 'react-hot-toast';
 
 function PasswordChange({ onChange }: { onChange: () => void }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<{ oldPassword: string; newPassword: string }>();
@@ -35,8 +37,16 @@ interface ProfileFormData {
   zipCode?: string;
 }
 
+// Add Order type definition above useOrders
+interface Order {
+  id: string;
+  created_at: string;
+  total_price: number;
+  // Add other fields as needed
+}
+
 function useOrders(userId: string | null) {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,7 +57,7 @@ function useOrders(userId: string | null) {
       .select('*')
       .eq('customer_id', userId)
       .order('created_at', { ascending: false })
-      .then((response: { data: any[]; error: any }) => {
+      .then((response: { data: Order[] | null; error: any }) => {
         const { data, error } = response;
         if (!error && data) setOrders(data);
         setLoading(false);
@@ -134,6 +144,38 @@ export default function Profile() {
   const handleCancel = () => {
     reset();
     setIsEditing(false);
+  };
+
+  const addOrderToCart = async (orderId: string) => {
+    // Fetch order items from Supabase
+    const { data: orderItems, error } = await supabase
+      .from('order_items')
+      .select('*')
+      .eq('order_id', orderId);
+
+    if (error || !orderItems) {
+      toast.error('Failed to reorder. Please try again.');
+      return;
+    }
+
+    // Add each item to cart
+    orderItems.forEach((item: any) => {
+      useCartStore.getState().addItem({
+        id: item.product_id,
+        name: item.product_name,
+        price: item.price,
+        image: item.image || '',
+        customizations: item.customizations,
+        type: item.type,
+        // Do NOT include quantity here, as addItem expects Omit<CartItem, 'quantity'>
+      });
+      // Set quantity if more than 1
+      if (item.quantity && item.quantity > 1) {
+        useCartStore.getState().updateQuantity(item.product_id, item.quantity);
+      }
+    });
+
+    toast.success('Order items added to cart!');
   };
 
   return (
@@ -376,7 +418,7 @@ export default function Profile() {
                         </span>
                         <button
                           className="bg-blue-600 text-white px-3 py-1 rounded"
-                          onClick={() => {/* TODO: Implement reorder logic */}}
+                          onClick={() => addOrderToCart(order.id)}
                         >
                           Reorder
                         </button>

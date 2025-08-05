@@ -91,11 +91,11 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-accent-400" />
-                <span className="text-gray-300">123 Baker Street, Downtown District</span>
+                <span className="text-gray-300">Community Road, Syokimau</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-accent-400" />
-                <span className="text-gray-300">(555) 123-BAKE</span>
+                <span className="text-gray-300">(+254) 787943878-BAKE</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-accent-400" />
@@ -182,7 +182,7 @@ export default function Footer() {
             <div className="flex items-center text-gray-400 text-sm">
               <span>Made with</span>
               <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" />
-              <span>© 2024 Artisan Bakery. All rights reserved.</span>
+              <span>© 2025 Artisan Bakery. All rights reserved.</span>
             </div>
           </div>
         </div>

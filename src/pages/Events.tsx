@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Star, ChefHat, Gift, Heart } from 'lucide-react';
 import { formatDate } from '../lib/utils';
@@ -300,7 +300,7 @@ export default function Events() {
             transition={{ delay: 0.1 }}
             className="text-xl text-primary-200 max-w-3xl mx-auto"
           >
-            Join our expert bakers for hands-on workshops, masterclasses, and special events. 
+            Join our expert bakers for hands-on workshops, masterclasses, and special events.
             Learn new skills and create delicious memories.
           </motion.p>
         </div>
@@ -364,7 +364,7 @@ export default function Events() {
             {filteredEvents.map((event, index) => {
               const CategoryIcon = getCategoryIcon(event.category);
               const spotsLeft = event.maxParticipants - event.currentParticipants;
-              
+
               return (
                 <motion.div
                   key={event.id}
@@ -433,10 +433,10 @@ export default function Events() {
                       </div>
                     </div>
 
-                    <button 
+                    <button
                       className={`w-full mt-4 py-3 rounded-lg font-semibold transition-colors ${
-                        spotsLeft > 0 
-                          ? 'bg-primary-600 hover:bg-primary-700 text-white' 
+                        spotsLeft > 0
+                          ? 'bg-primary-600 hover:bg-primary-700 text-white'
                           : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                       }`}
                       disabled={spotsLeft === 0}
@@ -469,7 +469,7 @@ export default function Events() {
             transition={{ delay: 0.1 }}
             className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto"
           >
-            Looking for a unique team building experience or private celebration? 
+            Looking for a unique team building experience or private celebration?
             We offer custom baking workshops for groups of 8 or more.
           </motion.p>
           <motion.div

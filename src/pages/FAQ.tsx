@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Search, HelpCircle, Clock, ShoppingCart, Calendar } from 'lucide-react';
 
@@ -111,8 +111,8 @@ export default function FAQ() {
   const [openItems, setOpenItems] = useState<string[]>([]);
 
   const toggleItem = (id: string) => {
-    setOpenItems(prev => 
-      prev.includes(id) 
+    setOpenItems(prev =>
+      prev.includes(id)
         ? prev.filter(item => item !== id)
         : [...prev, id]
     );
@@ -120,7 +120,7 @@ export default function FAQ() {
 
   const filteredFAQs = faqData.filter(faq => {
     const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory;
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -203,7 +203,7 @@ export default function FAQ() {
               {filteredFAQs.map((faq, index) => {
                 const isOpen = openItems.includes(faq.id);
                 const CategoryIcon = getCategoryIcon(faq.category);
-                
+
                 return (
                   <motion.div
                     key={faq.id}
@@ -230,14 +230,14 @@ export default function FAQ() {
                             </span>
                           </div>
                         </div>
-                        <ChevronDown 
+                        <ChevronDown
                           className={`w-6 h-6 text-gray-400 transition-transform ${
                             isOpen ? 'rotate-180' : ''
                           }`}
                         />
                       </div>
                     </button>
-                    
+
                     <AnimatePresence>
                       {isOpen && (
                         <motion.div

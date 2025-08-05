@@ -1,9 +1,7 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Clock, Star, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../stores/cartStore';
-import toast from 'react-hot-toast';
 
 const quickOrderItems = [
 	{
