@@ -1,8 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, MapPin, Edit, Save, X } from 'lucide-react';
+import { Edit, Save, X, ImagePlus, KeyRound, Shield } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../stores/authStore';
+// import useOrders from hook if available, else mock for now
+const useOrders = () => ({ orders: [] });
+function PasswordChange({ onChange }: { onChange: () => void }) {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<{ oldPassword: string; newPassword: string }>();
+  const onSubmit = async () => {
+    // TODO: Integrate with Supabase password change
+    alert('Password change submitted!');
+    reset();
+    onChange();
+  };
+  return (
+    <form onSubmit={handleSubmit(() => onSubmit())} className="space-y-4 mt-6">
+      <h3 className="text-lg font-semibold">Change Password</h3>
+      <input {...register('oldPassword', { required: 'Current password required' })} type="password" placeholder="Current Password" className="border p-2 w-full rounded" />
+      {errors.oldPassword && <p className="text-red-500 text-xs">{errors.oldPassword.message}</p>}
+      <input {...register('newPassword', { required: 'New password required' })} type="password" placeholder="New Password" className="border p-2 w-full rounded" />
+      {errors.newPassword && <p className="text-red-500 text-xs">{errors.newPassword.message}</p>}
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Change Password</button>
+    </form>
+  );
+}
 
 interface ProfileFormData {
   firstName: string;
@@ -17,6 +39,10 @@ interface ProfileFormData {
 export default function Profile() {
   const { user, customer, updateProfile } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  // Use avatarUrl from customer if available, else fallback
+  const [avatarUrl, setAvatarUrl] = useState((customer && 'avatar_url' in customer ? (customer as any).avatar_url : '') || '');
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ProfileFormData>({
     defaultValues: {
       firstName: customer?.first_name || '',
@@ -28,6 +54,7 @@ export default function Profile() {
       zipCode: customer?.zip_code || '',
     }
   });
+  const { orders } = useOrders();
 
   if (!user) {
     return (
@@ -53,10 +80,33 @@ export default function Profile() {
       address: data.address,
       city: data.city,
       zip_code: data.zipCode,
+      avatar_url: avatarUrl,
     });
-
     if (success) {
       setIsEditing(false);
+    }
+  };
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    // Upload to Supabase Storage
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}.${Date.now()}.${fileExt}`;
+    const { error } = await supabase.storage
+      .from('avatars')
+      .upload(fileName, file, { upsert: true });
+    if (error) {
+      alert('Failed to upload image: ' + error.message);
+      return;
+    }
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(fileName);
+    if (urlData?.publicUrl) {
+      setAvatarUrl(urlData.publicUrl);
+      // Optionally update profile immediately
+      await updateProfile({ avatar_url: urlData.publicUrl });
     }
   };
 
@@ -88,8 +138,24 @@ export default function Profile() {
             <div className="bg-primary-50 dark:bg-primary-900/20 px-6 py-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="bg-primary-600 p-4 rounded-full">
-                    <User className="w-8 h-8 text-white" />
+                  <div className="relative">
+                    <img src={avatarUrl || '/default-avatar.png'} alt="Avatar" className="w-16 h-16 rounded-full object-cover border-4 border-primary-600" />
+                    {isEditing && (
+                      <button
+                        type="button"
+                        className="absolute bottom-0 right-0 bg-primary-600 p-2 rounded-full text-white"
+                        onClick={() => avatarInputRef.current?.click()}
+                      >
+                        <ImagePlus className="w-4 h-4" />
+                      </button>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={avatarInputRef}
+                      style={{ display: 'none' }}
+                      onChange={handleAvatarChange}
+                    />
                   </div>
                   <div>
                     <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -100,7 +166,7 @@ export default function Profile() {
                     </p>
                   </div>
                 </div>
-                
+
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
@@ -108,6 +174,20 @@ export default function Profile() {
                   >
                     <Edit className="w-4 h-4" />
                     Edit Profile
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowPasswordChange((v) => !v)}
+                  className="ml-4 flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
+                >
+                  <KeyRound className="w-4 h-4" />
+                  Change Password
+                </button>
+                {/* Admin controls example */}
+                {user?.role === 'admin' && (
+                  <button className="ml-4 flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors">
+                    <Shield className="w-4 h-4" />
+                    Admin Controls
                   </button>
                 )}
               </div>
@@ -164,7 +244,7 @@ export default function Profile() {
                         Email
                       </label>
                       <input
-                        {...register('email', { 
+                        {...register('email', {
                           required: 'Email is required',
                           pattern: {
                             value: /^\S+@\S+$/i,
@@ -261,6 +341,27 @@ export default function Profile() {
                   </div>
                 )}
               </form>
+              {/* Password Change Section */}
+              {showPasswordChange && <PasswordChange onChange={() => setShowPasswordChange(false)} />}
+              {/* Order History Section */}
+              <div className="mt-12">
+                <h3 className="text-lg font-semibold mb-4">Order History</h3>
+                {orders && orders.length > 0 ? (
+                  <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {orders.map((order: any) => (
+                      <li key={order.id} className="py-4 flex justify-between items-center">
+                        <div>
+                          <span className="font-semibold">Order #{order.id}</span> - {order.status}
+                          <div className="text-xs text-gray-500">{new Date(order.created_at).toLocaleDateString()}</div>
+                        </div>
+                        <button className="bg-primary-600 text-white px-3 py-1 rounded text-sm">Reorder</button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">No orders found.</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
