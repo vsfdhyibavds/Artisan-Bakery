@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Clock, Users, Heart, Send, Upload } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -117,7 +117,7 @@ export default function Careers() {
             transition={{ delay: 0.1 }}
             className="text-xl text-primary-200 max-w-3xl mx-auto"
           >
-            Be part of a passionate team dedicated to creating exceptional baked goods 
+            Be part of a passionate team dedicated to creating exceptional baked goods
             and serving our community with love and tradition.
           </motion.p>
         </div>
@@ -131,7 +131,7 @@ export default function Careers() {
               Why Work With Us?
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
@@ -391,7 +391,7 @@ export default function Careers() {
                       Email *
                     </label>
                     <input
-                      {...register('email', { 
+                      {...register('email', {
                         required: 'Email is required',
                         pattern: {
                           value: /^\S+@\S+$/i,

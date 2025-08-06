@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Clock, Phone, Mail } from 'lucide-react';
 
@@ -29,7 +28,7 @@ export default function LocationHours() {
                 Visit Our Bakery
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                Located in the heart of downtown, our bakery has been serving the community 
+                Located in the heart of downtown, our bakery has been serving the community
                 with fresh, artisanal baked goods since 1985.
               </p>
             </div>
@@ -94,21 +93,21 @@ export default function LocationHours() {
                   <div
                     key={schedule.day}
                     className={`flex justify-between items-center py-3 px-4 rounded-lg transition-colors ${
-                      isToday 
-                        ? 'bg-accent-100 dark:bg-accent-900/20 border-l-4 border-accent-500' 
+                      isToday
+                        ? 'bg-accent-100 dark:bg-accent-900/20 border-l-4 border-accent-500'
                         : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <span className={`font-medium ${
-                      isToday 
-                        ? 'text-accent-700 dark:text-accent-300' 
+                      isToday
+                        ? 'text-accent-700 dark:text-accent-300'
                         : 'text-gray-900 dark:text-white'
                     }`}>
                       {schedule.day}
                     </span>
                     <span className={`${
-                      isToday 
-                        ? 'text-accent-600 dark:text-accent-400 font-semibold' 
+                      isToday
+                        ? 'text-accent-600 dark:text-accent-400 font-semibold'
                         : 'text-gray-600 dark:text-gray-300'
                     }`}>
                       {schedule.hours}
@@ -120,7 +119,7 @@ export default function LocationHours() {
 
             <div className="mt-8 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
               <p className="text-green-800 dark:text-green-200 text-sm">
-                <strong>Fresh Daily:</strong> All our breads and pastries are baked fresh every morning. 
+                <strong>Fresh Daily:</strong> All our breads and pastries are baked fresh every morning.
                 Come early for the best selection!
               </p>
             </div>

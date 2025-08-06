@@ -1,13 +1,12 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Package, Clock, CheckCircle, XCircle, Truck, MapPin } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, MapPin } from 'lucide-react'; // Removed unused Truck
 import { useUserOrders } from '../hooks/useOrders';
 import { useAuthStore } from '../stores/authStore';
 import { formatPrice, formatDate } from '../lib/utils';
 
 export default function Orders() {
   const { user } = useAuthStore();
-  const { data: orders = [], isLoading, error } = useUserOrders();
+  const { data: orders = [], isLoading } = useUserOrders(); // Removed unused error
 
   if (!user) {
     return (
@@ -89,7 +88,7 @@ export default function Orders() {
             </div>
           ) : (
             <div className="space-y-6">
-              {orders.map((order, index) => {
+              {orders.map((order: any, index: number) => { // Explicitly type order and index
                 const StatusIcon = getStatusIcon(order.status);
                 return (
                   <motion.div
@@ -113,7 +112,7 @@ export default function Orders() {
                           </p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center gap-4">
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
                           {order.status.charAt(0).toUpperCase() + order.status.slice(1)}

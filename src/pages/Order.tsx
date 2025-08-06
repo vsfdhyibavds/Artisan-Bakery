@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Plus, Minus, X, Calendar, Clock, MapPin, CreditCard } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { ShoppingCart, Plus, Minus, Calendar, Clock, CreditCard } from 'lucide-react'; // Removed unused MapPin
 import OrderForm from '../components/order/OrderForm';
 import CakeBuilder from '../components/order/CakeBuilder';
 import { formatPrice } from '../lib/utils';
@@ -14,21 +13,6 @@ interface CartItem {
   image: string;
   customizations?: string[];
 }
-
-const orderTypes = [
-  {
-    id: 'pickup',
-    name: 'Pickup',
-    description: 'Pick up your order at our bakery',
-    icon: MapPin,
-  },
-  {
-    id: 'delivery',
-    name: 'Delivery',
-    description: 'We\'ll deliver to your location',
-    icon: ShoppingCart,
-  },
-];
 
 export default function Order() {
   const [orderType, setOrderType] = useState('pickup');
@@ -254,7 +238,7 @@ export default function Order() {
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
                     Payment Information
                   </h2>
-                  
+
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>

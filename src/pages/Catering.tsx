@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Calendar, Clock, Star, ChefHat, Heart } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -89,7 +89,6 @@ const eventTypes = [
 ];
 
 export default function Catering() {
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [showInquiryForm, setShowInquiryForm] = useState(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<CateringInquiry>();
 
@@ -118,7 +117,7 @@ export default function Catering() {
             transition={{ delay: 0.1 }}
             className="text-xl text-primary-200 max-w-3xl mx-auto"
           >
-            Make your event memorable with our fresh, artisanal catering options. 
+            Make your event memorable with our fresh, artisanal catering options.
             From intimate gatherings to large celebrations, we've got you covered.
           </motion.p>
         </div>
@@ -145,7 +144,6 @@ export default function Catering() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 className="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
-                onClick={() => setSelectedPackage(pkg.id)}
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -358,7 +356,7 @@ export default function Catering() {
                       Email *
                     </label>
                     <input
-                      {...register('email', { 
+                      {...register('email', {
                         required: 'Email is required',
                         pattern: {
                           value: /^\S+@\S+$/i,

@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, ShoppingCart, Star, Leaf } from 'lucide-react';
+import { Search, Filter, ShoppingCart, Leaf } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/menu/ProductCard';
-import { Product } from '../lib/types';
 
 const categories = [
   { id: 'all', name: 'All Items', icon: null },
@@ -97,7 +96,7 @@ export default function Menu() {
             transition={{ delay: 0.1 }}
             className="text-xl text-primary-200 max-w-3xl mx-auto"
           >
-            Discover our full range of artisanal breads, pastries, cakes, and more. 
+            Discover our full range of artisanal breads, pastries, cakes, and more.
             All made fresh daily with the finest ingredients.
           </motion.p>
         </div>
@@ -153,7 +152,7 @@ export default function Menu() {
                   </option>
                 ))}
               </select>
-              
+
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className="lg:hidden p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300"
@@ -232,14 +231,14 @@ export default function Menu() {
             We offer custom orders for special occasions and dietary requirements.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
+            <button
               onClick={handleCustomOrder}
               className="btn-primary flex items-center gap-2"
             >
               <ShoppingCart className="w-5 h-5" />
               Place Custom Order
             </button>
-            <button 
+            <button
               onClick={handleContactUs}
               className="btn-outline"
             >

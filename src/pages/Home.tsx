@@ -1,4 +1,3 @@
-import React from 'react';
 import Hero from '../components/home/Hero';
 import Specials from '../components/home/Specials';
 import QuickOrder from '../components/home/QuickOrder';

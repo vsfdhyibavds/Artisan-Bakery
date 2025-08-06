@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, User, Tag, Search, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, User, Search, ArrowRight } from 'lucide-react';
 import { formatDate } from '../lib/utils';
 
 interface BlogPost {
@@ -154,7 +154,7 @@ export default function Blog() {
                 {selectedPost.excerpt}
               </p>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                This is where the full blog post content would be displayed. In a real application, 
+                This is where the full blog post content would be displayed. In a real application,
                 this would contain the complete article with proper formatting, images, and rich content.
               </p>
               {/* Add more content sections as needed */}
@@ -198,7 +198,7 @@ export default function Blog() {
             transition={{ delay: 0.1 }}
             className="text-xl text-primary-200 max-w-3xl mx-auto"
           >
-            Tips, techniques, and stories from our master bakers. Learn the secrets 
+            Tips, techniques, and stories from our master bakers. Learn the secrets
             behind perfect pastries, breads, and cakes.
           </motion.p>
         </div>
