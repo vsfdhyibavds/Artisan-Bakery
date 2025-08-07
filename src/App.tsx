@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
@@ -33,16 +33,19 @@ const queryClient = new QueryClient({
 
 function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
+
   const { initialize, loading } = useAuthStore();
 
   useEffect(() => {
     initialize();
   }, [initialize]);
 
-  const openAuthModal = (mode: 'signin' | 'signup' = 'signin') => {
-    setAuthModalMode(mode);
+  const openAuthModal = () => {
     setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
   };
 
   if (loading) {
@@ -78,13 +81,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
-          
-          <AuthModal
-            isOpen={authModalOpen}
-            onClose={() => setAuthModalOpen(false)}
-            initialMode={authModalMode}
-          />
-          
+
           <Toaster
             position="top-right"
             toastOptions={{
@@ -95,6 +92,22 @@ function App() {
               },
             }}
           />
+
+          {/* Auth Modal */}
+          {authModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+              <div className="bg-white rounded-lg shadow-lg p-6 relative w-full max-w-md">
+                <button
+                  className="absolute top-2 right-2 text-gray-500 text-2xl"
+                  onClick={closeAuthModal}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+                <AuthModal />
+              </div>
+            </div>
+          )}
         </div>
       </Router>
     </QueryClientProvider>

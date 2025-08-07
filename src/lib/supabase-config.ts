@@ -223,7 +223,7 @@ class SupabaseManager {
             first_name: 'Demo',
             last_name: 'User',
             email: 'demo@example.com',
-            phone: '(555) 123-4567',
+            phone: '(+254) 787943878',
             address: '123 Demo Street',
             city: 'Demo City',
             zip_code: '12345',

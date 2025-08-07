@@ -74,8 +74,8 @@ export default function Header({ onAuthClick }: HeaderProps) {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <Phone className="w-4 h-4" />
-              <a href="tel:5551234BAKE" className="hover:text-accent-300 transition-colors">
-                (+254) 7879438878-BAKE
+              <a href="tel:+254787943878" className="hover:text-accent-300 transition-colors">
+                (+254) 787943878
               </a>
             </div>
             <div className="hidden sm:flex items-center gap-1">

@@ -199,7 +199,7 @@ export default function Contact() {
                       {...register('phone')}
                       type="tel"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      placeholder="(254) 123-45678"
+                      placeholder="(+254) 712345678"
                     />
                   </div>
                 </div>
@@ -331,7 +331,7 @@ export default function Contact() {
                   </button>
                   <button
                     className="w-full flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    onClick={() => window.open('tel:+2547879438878')}
+                    onClick={() => window.open('tel:+254787943878')}
                   >
                     <Phone className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     <span className="text-gray-900 dark:text-white">Request a Call Back</span>

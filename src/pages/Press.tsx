@@ -126,7 +126,7 @@ export default function Press() {
 									Email: press@artisanbakery.com
 								</p>
 								<p className="text-gray-600 dark:text-gray-300">
-									Phone: (555) 123-BAKE ext. 101
+									Phone: (+254) 787943878
 								</p>
 							</div>
 						</div>
