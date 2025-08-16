@@ -4,6 +4,23 @@ import { Database } from './database.types';
 // Initialize Supabase client with auto-configuration
 export const supabase = supabaseManager.initializeClient();
 
+// Clear stale session on initialization
+if (typeof window !== 'undefined') {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'TOKEN_REFRESHED' && !session) {
+      // If token refresh failed, clear all auth data
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('sb-')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+    }
+  });
+}
+
 // Auto-setup for current platform
 supabaseManager.autoSetupForPlatform();
 
