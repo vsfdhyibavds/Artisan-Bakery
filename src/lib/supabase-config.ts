@@ -81,6 +81,18 @@ class SupabaseManager {
   initializeClient() {
     if (this.client) return this.client;
 
+    // Clear any stale Supabase session data
+    if (typeof window !== 'undefined') {
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith('sb-') || key.includes('supabase'))) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+    }
+
     this.config = this.detectConfiguration();
 
     // Always use mock client in demo mode to prevent network errors
