@@ -16,18 +16,21 @@
     "setup": "chmod +x scripts/setup.sh && ./scripts/setup.sh"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.52.0",
+    "@supabase/supabase-js": "^2.54.0",
     "@tanstack/react-query": "^5.17.9",
+    "@types/react-toastify": "^4.0.2",
     "clsx": "^2.1.0",
     "date-fns": "^3.0.6",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.303.0",
+    "otpauth": "^9.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.4",
     "react-hook-form": "^7.61.1",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.21.1",
+    "react-toastify": "^11.0.5",
     "tailwind-merge": "^2.2.0",
     "zustand": "^4.4.7"
   },
