@@ -351,7 +351,7 @@ export default function AuthModal() {
         <p className="text-sm text-blue-800 dark:text-blue-200">
           <strong>Demo Mode:</strong> This is a demonstration. In demo mode, you can explore the interface 
           without creating a real account. To enable full functionality, configure Supabase using the 
-          "Setup" button in the header.
+          "Setup\" button in the header.
         </p>
       </div>
     </div>
