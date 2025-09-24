@@ -160,7 +160,7 @@ export default function Header({ onAuthClick }: HeaderProps) {
                   >
                     <User className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {customer?.first_name || user?.user_metadata?.firstName || user?.email?.split('@')[0] || 'Account'}
+                      {customer?.first_name || user?.user_metadata?.firstName || user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'Account'}
                     </span>
                   </button>
 

@@ -48,6 +48,10 @@ function App() {
     setAuthModalOpen(false);
   };
 
+  const handleAuthSuccess = () => {
+    setAuthModalOpen(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
@@ -95,10 +99,10 @@ function App() {
 
           {/* Auth Modal */}
           {authModalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-              <div className="bg-white rounded-lg shadow-lg p-6 relative w-full max-w-md">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={closeAuthModal}>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative w-full max-w-md" onClick={(e) => e.stopPropagation()}>
                 <button
-                  className="absolute top-2 right-2 text-gray-500 text-2xl"
+                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
                   onClick={closeAuthModal}
                   aria-label="Close"
                 >
