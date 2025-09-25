@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus } from 'lucide-react';
+import { X } from 'lucide-react';
 import { formatPrice } from '../../lib/utils';
 
 interface CakeBuilderProps {
@@ -67,25 +67,25 @@ export default function CakeBuilder({ onClose }: CakeBuilderProps) {
 
   const calculateTotal = () => {
     let total = 0;
-    
+
     // Size price
     const sizeOption = cakeOptions.size.find(s => s.id === selectedOptions.size);
     if (sizeOption) total += sizeOption.price;
-    
+
     // Flavor price
     const flavorOption = cakeOptions.flavor.find(f => f.id === selectedOptions.flavor);
     if (flavorOption) total += flavorOption.price;
-    
+
     // Frosting price
     const frostingOption = cakeOptions.frosting.find(f => f.id === selectedOptions.frosting);
     if (frostingOption) total += frostingOption.price;
-    
+
     // Decorations price
     selectedOptions.decorations.forEach(decorationId => {
       const decoration = cakeOptions.decorations.find(d => d.id === decorationId);
       if (decoration) total += decoration.price;
     });
-    
+
     return total;
   };
 
@@ -215,7 +215,7 @@ export default function CakeBuilder({ onClose }: CakeBuilderProps) {
                 </div>
               </button>
             ))}
-            
+
             {selectedOptions.decorations.includes('custom-message') && (
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -239,7 +239,7 @@ export default function CakeBuilder({ onClose }: CakeBuilderProps) {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Review Your Custom Cake
             </h3>
-            
+
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-3">
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Size:</span>
@@ -283,7 +283,7 @@ export default function CakeBuilder({ onClose }: CakeBuilderProps) {
                 </div>
               )}
             </div>
-            
+
             <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
               <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
                 <span>Total:</span>
@@ -375,7 +375,7 @@ export default function CakeBuilder({ onClose }: CakeBuilderProps) {
           <div className="text-lg font-semibold text-gray-900 dark:text-white">
             Total: {formatPrice(calculateTotal())}
           </div>
-          
+
           <div className="flex gap-3">
             {currentStep > 0 && (
               <button
@@ -385,7 +385,7 @@ export default function CakeBuilder({ onClose }: CakeBuilderProps) {
                 Back
               </button>
             )}
-            
+
             {currentStep < steps.length - 1 ? (
               <button
                 onClick={() => setCurrentStep(currentStep + 1)}

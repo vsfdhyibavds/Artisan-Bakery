@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { testimonials } from '../../data/testimonials';
@@ -37,8 +37,8 @@ export default function Testimonials() {
       <Star
         key={i}
         className={`w-5 h-5 ${
-          i < rating 
-            ? 'text-yellow-400 fill-current' 
+          i < rating
+            ? 'text-yellow-400 fill-current'
             : 'text-gray-300 dark:text-gray-600'
         }`}
       />
@@ -112,7 +112,7 @@ export default function Testimonials() {
                     <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                       "{testimonials[currentIndex].content}"
                     </p>
-                    
+
                     <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
                       <div>
                         <h4 className="font-semibold text-gray-900 dark:text-white">
@@ -143,8 +143,8 @@ export default function Testimonials() {
                 key={index}
                 onClick={() => goToTestimonial(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentIndex 
-                    ? 'bg-primary-600' 
+                  index === currentIndex
+                    ? 'bg-primary-600'
                     : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}

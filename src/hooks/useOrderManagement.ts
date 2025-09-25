@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { db, api } from '../lib/supabase';
+import { db, supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { useAuthStore } from '../stores/authStore';
 import { useCartStore } from '../stores/cartStore';
 import toast from 'react-hot-toast';
@@ -7,7 +8,7 @@ import toast from 'react-hot-toast';
 export const useOrderManagement = () => {
   const queryClient = useQueryClient();
   const { user, customer } = useAuthStore();
-  const { items: cartItems, clearCart, getTotal, getSubtotal, getTax } = useCartStore();
+  const { items: cartItems, clearCart, getSubtotal, getTax } = useCartStore();
 
   // Create complete order with payment processing
   const createOrder = useMutation({
@@ -39,11 +40,11 @@ export const useOrderManagement = () => {
           orderData.deliveryAddress.zipCode,
           subtotal
         );
-        
+
         if (!deliveryCalc.canDeliver) {
           throw new Error('Delivery not available to this area');
         }
-        
+
         deliveryFee = deliveryCalc.deliveryFee;
       }
 
@@ -90,7 +91,7 @@ export const useOrderManagement = () => {
 
       if (!paymentResult.success) {
         // Update order status to failed
-        await db.updateOrder(order.id, { 
+        await db.updateOrder(order.id, {
           payment_status: 'failed',
           status: 'cancelled'
         });
@@ -98,7 +99,7 @@ export const useOrderManagement = () => {
       }
 
       // Update order status to paid
-      await db.updateOrder(order.id, { 
+      await db.updateOrder(order.id, {
         payment_status: 'paid',
         status: 'confirmed'
       });
@@ -136,7 +137,7 @@ export const useOrderManagement = () => {
     queryKey: ['user-orders', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      
+
       const { data, error } = await supabase
         .from('orders')
         .select(`
@@ -161,7 +162,7 @@ export const useOrderManagement = () => {
     mutationFn: async (orderId: string) => {
       const { error } = await supabase
         .from('orders')
-        .update({ 
+        .update({
           status: 'cancelled',
           updated_at: new Date().toISOString()
         })

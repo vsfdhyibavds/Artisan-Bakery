@@ -191,7 +191,7 @@ export function useAuth() {
         algorithm: "SHA1",
         digits: 6,
         period: 30,
-        secret: OTPAuth.Secret.generate()
+        secret: new OTPAuth.Secret({ size: 20 })
       });
 
       const { error: updateError } = await supabase.auth.updateUser({

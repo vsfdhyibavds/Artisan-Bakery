@@ -1,12 +1,11 @@
 import { supabaseManager } from './supabase-config';
-import { Database } from './database.types';
 
 // Initialize Supabase client with auto-configuration
 export const supabase = supabaseManager.initializeClient();
 
 // Clear stale session on initialization
 if (typeof window !== 'undefined') {
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange((event: string, session: any) => {
     if (event === 'TOKEN_REFRESHED' && !session) {
       // If token refresh failed, clear all auth data
       const keysToRemove = [];
@@ -40,7 +39,7 @@ export const auth = {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { 
+        options: {
           data: {
             firstName: userData.firstName,
             lastName: userData.lastName,
@@ -143,6 +142,20 @@ export const db = {
       const { data, error } = await supabase
         .from('orders')
         .insert(orderData)
+        .select()
+        .single();
+      return { data, error };
+    } catch (err) {
+      return { data: null, error: { message: 'Database service unavailable' } };
+    }
+  },
+
+  updateOrder: async (orderId: string, updateData: any) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .update(updateData)
+        .eq('id', orderId)
         .select()
         .single();
       return { data, error };

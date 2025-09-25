@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Clock, ShoppingCart } from 'lucide-react';
 import { getSpecialProducts } from '../../data/products';

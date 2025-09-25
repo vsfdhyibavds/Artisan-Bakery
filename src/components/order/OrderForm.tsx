@@ -1,7 +1,6 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { MapPin, Clock, Calendar, Truck } from 'lucide-react';
+import { MapPin, Truck } from 'lucide-react';
 
 interface OrderFormProps {
   orderType: string;
@@ -31,7 +30,7 @@ const timeSlots = [
 ];
 
 export default function OrderForm({ orderType, setOrderType, onNext, onBack }: OrderFormProps) {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
     console.log('Order form data:', data);
@@ -140,7 +139,7 @@ export default function OrderForm({ orderType, setOrderType, onNext, onBack }: O
                 Email *
               </label>
               <input
-                {...register('email', { 
+                {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^\S+@\S+$/i,

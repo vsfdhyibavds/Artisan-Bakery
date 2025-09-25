@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Lock, AlertCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -38,18 +38,20 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
   const { register, handleSubmit, formState: { errors } } = useForm<PaymentFormData>();
 
   const onSubmit = async (data: PaymentFormData) => {
-    setProcessing(true);
-    
+  setProcessing(true);
+  // 'data' contains the payment form values. Use it for payment processing in a real implementation.
+
     try {
       // In a real implementation, you would tokenize the card with Stripe
       // and get a payment method ID. For demo purposes, we'll use a mock ID.
       const mockPaymentMethodId = `pm_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       await createOrder.mutateAsync({
         ...orderData,
+        ...data, // include payment form data to use the variable
         paymentMethodId: mockPaymentMethodId
       });
-      
+
       onSuccess();
     } catch (error) {
       console.error('Payment failed:', error);
@@ -93,7 +95,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Card Information
           </h3>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -102,7 +104,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
               <div className="relative">
                 <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                  {...register('cardNumber', { 
+                  {...register('cardNumber', {
                     required: 'Card number is required',
                     pattern: {
                       value: /^[0-9\s]{13,19}$/,
@@ -125,7 +127,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
                   Expiry Date *
                 </label>
                 <input
-                  {...register('expiryDate', { 
+                  {...register('expiryDate', {
                     required: 'Expiry date is required',
                     pattern: {
                       value: /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
@@ -145,7 +147,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
                   CVV *
                 </label>
                 <input
-                  {...register('cvv', { 
+                  {...register('cvv', {
                     required: 'CVV is required',
                     pattern: {
                       value: /^[0-9]{3,4}$/,
@@ -184,7 +186,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Billing Address
           </h3>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -243,7 +245,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
                 Secure Payment Processing
               </p>
               <p className="text-sm text-blue-600 dark:text-blue-300">
-                Your payment is processed securely using industry-standard encryption. 
+                Your payment is processed securely using industry-standard encryption.
                 We never store your card information.
               </p>
             </div>

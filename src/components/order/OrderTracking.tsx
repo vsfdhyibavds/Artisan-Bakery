@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Clock, Package, Truck, MapPin } from 'lucide-react';
 import { api } from '../../lib/api';
@@ -24,7 +24,6 @@ const deliveryStatuses = [
 
 export default function OrderTracking({ orderId, currentStatus }: OrderTrackingProps) {
   const [status, setStatus] = useState(currentStatus);
-  const [estimatedTime, setEstimatedTime] = useState('30-45 minutes');
 
   useEffect(() => {
     // Subscribe to real-time order updates
@@ -55,7 +54,7 @@ export default function OrderTracking({ orderId, currentStatus }: OrderTrackingP
               Estimated Time
             </p>
             <p className="text-sm text-primary-600 dark:text-primary-300">
-              {estimatedTime}
+              30-45 minutes
             </p>
           </div>
         </div>
@@ -77,8 +76,8 @@ export default function OrderTracking({ orderId, currentStatus }: OrderTrackingP
               className="flex items-center gap-4"
             >
               <div className={`relative flex items-center justify-center w-10 h-10 rounded-full ${
-                isCompleted 
-                  ? 'bg-green-500 text-white' 
+                isCompleted
+                  ? 'bg-green-500 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-400'
               }`}>
                 <Icon className="w-5 h-5" />
@@ -86,11 +85,11 @@ export default function OrderTracking({ orderId, currentStatus }: OrderTrackingP
                   <div className="absolute inset-0 rounded-full border-2 border-green-500 animate-pulse"></div>
                 )}
               </div>
-              
+
               <div className="flex-1">
                 <p className={`font-medium ${
-                  isCompleted 
-                    ? 'text-gray-900 dark:text-white' 
+                  isCompleted
+                    ? 'text-gray-900 dark:text-white'
                     : 'text-gray-500 dark:text-gray-400'
                 }`}>
                   {statusItem.label}
