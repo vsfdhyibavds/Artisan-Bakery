@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import {
   ShoppingBag,
   MapPin,
@@ -9,7 +10,8 @@ import {
   Facebook,
   Instagram,
   Twitter,
-  Heart
+  Heart,
+  ChevronUp
 } from 'lucide-react';
 
 const footerLinks = {
@@ -40,6 +42,45 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  // Auto-scroll to top on mount
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Smooth scroll to top
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Auto-navigate with smooth scroll
+  const handleNavigation = (href: string) => {
+    const hash = href.split('#')[1];
+    navigate(href.split('#')[0]);
+
+    if (hash) {
+      // Wait for navigation to complete, then scroll to element
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      scrollToTop();
+    }
+
+    setActiveSection(hash || null);
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
@@ -72,7 +113,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center space-x-2 mb-6">
+            <Link to="/" onClick={() => scrollToTop()} className="flex items-center space-x-2 mb-6">
               <div className="bg-primary-600 p-2 rounded-lg">
                 <ShoppingBag className="w-8 h-8 text-white" />
               </div>
@@ -114,12 +155,16 @@ export default function Footer() {
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                  <motion.button
+                    onClick={() => handleNavigation(link.href)}
+                    whileHover={{ x: 5 }}
+                    whileTap={{ x: 0 }}
+                    className={`text-gray-400 hover:text-white transition-colors text-left ${
+                      activeSection && link.href.includes(activeSection) ? 'text-white' : ''
+                    }`}
                   >
                     {link.name}
-                  </Link>
+                  </motion.button>
                 </li>
               ))}
             </ul>
@@ -130,12 +175,16 @@ export default function Footer() {
             <ul className="space-y-2">
               {footerLinks.products.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                  <motion.button
+                    onClick={() => handleNavigation(link.href)}
+                    whileHover={{ x: 5 }}
+                    whileTap={{ x: 0 }}
+                    className={`text-gray-400 hover:text-white transition-colors text-left ${
+                      activeSection && link.href.includes(activeSection) ? 'text-white' : ''
+                    }`}
                   >
                     {link.name}
-                  </Link>
+                  </motion.button>
                 </li>
               ))}
             </ul>
@@ -146,19 +195,23 @@ export default function Footer() {
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                  <motion.button
+                    onClick={() => handleNavigation(link.href)}
+                    whileHover={{ x: 5 }}
+                    whileTap={{ x: 0 }}
+                    className={`text-gray-400 hover:text-white transition-colors text-left ${
+                      activeSection && link.href.includes(activeSection) ? 'text-white' : ''
+                    }`}
                   >
                     {link.name}
-                  </Link>
+                  </motion.button>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Social Links */}
+        {/* Social Links & Scroll to Top */}
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-6 mb-4 md:mb-0">
@@ -177,6 +230,23 @@ export default function Footer() {
                   </motion.a>
                 );
               })}
+
+              {/* Scroll to Top Button */}
+              {showScrollTop && (
+                <motion.button
+                  onClick={scrollToTop}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  whileHover={{ scale: 1.1, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-gray-400 hover:text-white transition-colors ml-4 pl-4 border-l border-gray-700"
+                  aria-label="Scroll to top"
+                  title="Back to top"
+                >
+                  <ChevronUp className="w-6 h-6" />
+                </motion.button>
+              )}
             </div>
 
             <div className="flex items-center text-gray-400 text-sm">

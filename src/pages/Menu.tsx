@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, ShoppingCart, Leaf } from 'lucide-react';
+import { Search, Filter, ShoppingCart, Leaf, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/menu/ProductCard';
@@ -26,7 +26,29 @@ export default function Menu() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const navigate = useNavigate();
+
+  // Auto-scroll tracking
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
@@ -102,6 +124,62 @@ export default function Menu() {
         </div>
       </section>
 
+      {/* Quick Navigation Buttons */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-2 z-50">
+        {/* Scroll to Sections */}
+        <div className="flex flex-col gap-2">
+          <motion.button
+            onClick={() => scrollToSection('bread')}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-full shadow-lg transition-colors"
+            title="Go to Breads"
+          >
+            <motion.span className="text-sm font-semibold" whileHover={{ y: -2 }}>
+              🍞
+            </motion.span>
+          </motion.button>
+          <motion.button
+            onClick={() => scrollToSection('pastry')}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-full shadow-lg transition-colors"
+            title="Go to Pastries"
+          >
+            <motion.span className="text-sm font-semibold" whileHover={{ y: -2 }}>
+              🥐
+            </motion.span>
+          </motion.button>
+          <motion.button
+            onClick={() => scrollToSection('cake')}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-full shadow-lg transition-colors"
+            title="Go to Cakes"
+          >
+            <motion.span className="text-sm font-semibold" whileHover={{ y: -2 }}>
+              🎂
+            </motion.span>
+          </motion.button>
+        </div>
+
+        {/* Scroll to Top Button */}
+        {showScrollTop && (
+          <motion.button
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            whileHover={{ scale: 1.1, y: -3 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-accent-500 hover:bg-accent-600 text-white p-3 rounded-full shadow-lg transition-colors"
+            title="Back to top"
+          >
+            <ChevronUp className="w-6 h-6" />
+          </motion.button>
+        )}
+      </div>
+
       {/* Filters and Search */}
       <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-20 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -123,9 +201,16 @@ export default function Menu() {
               {categories.map((category) => {
                 const Icon = category.icon;
                 return (
-                  <button
+                  <motion.button
                     key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
+                    onClick={() => {
+                      setSelectedCategory(category.id);
+                      if (category.id !== 'all') {
+                        scrollToSection(category.id);
+                      }
+                    }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                       selectedCategory === category.id
                         ? 'bg-primary-600 text-white'
@@ -134,7 +219,7 @@ export default function Menu() {
                   >
                     {Icon && <Icon className="w-4 h-4" />}
                     {category.name}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -182,18 +267,94 @@ export default function Menu() {
           {/* Products Grid */}
           <AnimatePresence>
             {filteredAndSortedProducts.length > 0 ? (
-              <motion.div
-                layout
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-              >
-                {filteredAndSortedProducts.map((product, index) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    index={index}
-                  />
-                ))}
-              </motion.div>
+              <>
+                {/* Breads Section */}
+                {(selectedCategory === 'all' || selectedCategory === 'bread') && (
+                  <div id="bread" className="mb-12">
+                    <h2 className="text-3xl font-display font-bold mb-6 text-gray-900 dark:text-white">
+                      Fresh Breads
+                    </h2>
+                    <motion.div
+                      layout
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
+                      {filteredAndSortedProducts
+                        .filter(p => p.category === 'bread')
+                        .map((product, index) => (
+                          <ProductCard
+                            key={product.id}
+                            product={product}
+                            index={index}
+                          />
+                        ))}
+                    </motion.div>
+                  </div>
+                )}
+
+                {/* Pastries Section */}
+                {(selectedCategory === 'all' || selectedCategory === 'pastry') && (
+                  <div id="pastry" className="mb-12">
+                    <h2 className="text-3xl font-display font-bold mb-6 text-gray-900 dark:text-white">
+                      Delicate Pastries
+                    </h2>
+                    <motion.div
+                      layout
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
+                      {filteredAndSortedProducts
+                        .filter(p => p.category === 'pastry')
+                        .map((product, index) => (
+                          <ProductCard
+                            key={product.id}
+                            product={product}
+                            index={index}
+                          />
+                        ))}
+                    </motion.div>
+                  </div>
+                )}
+
+                {/* Cakes Section */}
+                {(selectedCategory === 'all' || selectedCategory === 'cake') && (
+                  <div id="cake" className="mb-12">
+                    <h2 className="text-3xl font-display font-bold mb-6 text-gray-900 dark:text-white">
+                      Custom Cakes
+                    </h2>
+                    <motion.div
+                      layout
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
+                      {filteredAndSortedProducts
+                        .filter(p => p.category === 'cake')
+                        .map((product, index) => (
+                          <ProductCard
+                            key={product.id}
+                            product={product}
+                            index={index}
+                          />
+                        ))}
+                    </motion.div>
+                  </div>
+                )}
+
+                {/* Other Categories */}
+                {(selectedCategory === 'all' || selectedCategory === 'cookie' || selectedCategory === 'gluten-free') && (
+                  <motion.div
+                    layout
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                  >
+                    {filteredAndSortedProducts
+                      .filter(p => !['bread', 'pastry', 'cake'].includes(p.category))
+                      .map((product, index) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          index={index}
+                        />
+                      ))}
+                  </motion.div>
+                )}
+              </>
             ) : (
               <motion.div
                 initial={{ opacity: 0 }}

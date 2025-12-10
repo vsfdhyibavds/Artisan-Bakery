@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Users, Award, Heart, Clock, Leaf, Star } from 'lucide-react';
+import { Users, Award, Heart, Clock, Leaf, Star, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const stats = [
 	{ label: 'Years of Experience', value: '39', icon: Clock },
@@ -61,6 +62,28 @@ const values = [
 
 export default function About() {
 	const navigate = useNavigate();
+	const [showScrollTop, setShowScrollTop] = useState(false);
+
+	// Auto-scroll tracking
+	useEffect(() => {
+		const handleScroll = () => {
+			setShowScrollTop(window.scrollY > 300);
+		};
+
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
+
+	const scrollToTop = () => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	};
+
+	const scrollToSection = (sectionId: string) => {
+		const element = document.getElementById(sectionId);
+		if (element) {
+			element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	};
 
 	const handleVisitBakery = () => {
 		navigate('/contact');
@@ -76,8 +99,8 @@ export default function About() {
 
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900">
-			{/* Hero Section */}
-			<section className="relative py-20 bg-primary-50 dark:bg-gray-800">
+		{/* Hero Section */}
+		<section id="story" className="relative py-20 bg-primary-50 dark:bg-gray-800">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 						<motion.div
@@ -384,6 +407,22 @@ export default function About() {
 					</motion.div>
 				</div>
 			</section>
+
+			{/* Scroll to Top Button */}
+			{showScrollTop && (
+				<motion.button
+					onClick={scrollToTop}
+					initial={{ opacity: 0, scale: 0 }}
+					animate={{ opacity: 1, scale: 1 }}
+					exit={{ opacity: 0, scale: 0 }}
+					whileHover={{ scale: 1.1, y: -3 }}
+					whileTap={{ scale: 0.95 }}
+					className="fixed bottom-8 right-8 bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-full shadow-lg transition-colors z-50"
+					title="Back to top"
+				>
+					<ChevronUp className="w-6 h-6" />
+				</motion.button>
+			)}
 		</div>
 	);
 }
