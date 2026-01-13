@@ -339,23 +339,31 @@ export default function Catering() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Name *
                     </label>
                     <input
+                      id="catering-name"
+                      aria-label="Full Name"
+                      aria-required="true"
+                      aria-describedby={errors.name ? 'catering-name-error' : undefined}
                       {...register('name', { required: 'Name is required' })}
                       type="text"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                      <p id="catering-name-error" role="alert" className="text-red-500 text-sm mt-1">{errors.name.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Email *
                     </label>
                     <input
+                      id="catering-email"
+                      aria-label="Email Address"
+                      aria-required="true"
+                      aria-describedby={errors.email ? 'catering-email-error' : undefined}
                       {...register('email', {
                         required: 'Email is required',
                         pattern: {
@@ -367,30 +375,38 @@ export default function Catering() {
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                      <p id="catering-email-error" role="alert" className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Phone *
                     </label>
                     <input
+                      id="catering-phone"
+                      aria-label="Phone Number"
+                      aria-required="true"
+                      aria-describedby={errors.phone ? 'catering-phone-error' : undefined}
                       {...register('phone', { required: 'Phone number is required' })}
                       type="tel"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                      <p id="catering-phone-error" role="alert" className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-eventType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Event Type *
                     </label>
                     <select
+                      id="catering-eventType"
+                      aria-label="Type of Event"
+                      aria-required="true"
+                      aria-describedby={errors.eventType ? 'catering-eventType-error' : undefined}
                       {...register('eventType', { required: 'Event type is required' })}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
@@ -402,31 +418,39 @@ export default function Catering() {
                       ))}
                     </select>
                     {errors.eventType && (
-                      <p className="text-red-500 text-sm mt-1">{errors.eventType.message}</p>
+                      <p id="catering-eventType-error" role="alert" className="text-red-500 text-sm mt-1">{errors.eventType.message}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-eventDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Event Date *
                     </label>
                     <input
+                      id="catering-eventDate"
+                      aria-label="Event Date"
+                      aria-required="true"
+                      aria-describedby={errors.eventDate ? 'catering-eventDate-error' : undefined}
                       {...register('eventDate', { required: 'Event date is required' })}
                       type="date"
                       min={new Date().toISOString().split('T')[0]}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.eventDate && (
-                      <p className="text-red-500 text-sm mt-1">{errors.eventDate.message}</p>
+                      <p id="catering-eventDate-error" role="alert" className="text-red-500 text-sm mt-1">{errors.eventDate.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-guestCount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Guest Count *
                     </label>
                     <select
+                      id="catering-guestCount"
+                      aria-label="Number of Guests"
+                      aria-required="true"
+                      aria-describedby={errors.guestCount ? 'catering-guestCount-error' : undefined}
                       {...register('guestCount', { required: 'Guest count is required' })}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
@@ -438,14 +462,16 @@ export default function Catering() {
                       <option value="200+">200+ guests</option>
                     </select>
                     {errors.guestCount && (
-                      <p className="text-red-500 text-sm mt-1">{errors.guestCount.message}</p>
+                      <p id="catering-guestCount-error" role="alert" className="text-red-500 text-sm mt-1">{errors.guestCount.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="catering-budget" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Budget Range
                     </label>
                     <select
+                      id="catering-budget"
+                      aria-label="Budget Range"
                       {...register('budget')}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
@@ -460,10 +486,12 @@ export default function Catering() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="catering-message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Additional Details
                   </label>
                   <textarea
+                    id="catering-message"
+                    aria-label="Event Details, Dietary Restrictions, and Special Requests"
                     {...register('message')}
                     rows={4}
                     placeholder="Tell us about your event, dietary restrictions, special requests, etc."
@@ -481,6 +509,7 @@ export default function Catering() {
                   </button>
                   <button
                     type="submit"
+                    aria-label="Submit catering inquiry"
                     className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors"
                   >
                     Submit Inquiry

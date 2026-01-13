@@ -358,39 +358,51 @@ export default function Careers() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="careers-firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       First Name *
                     </label>
                     <input
+                      id="careers-firstName"
+                      aria-label="First Name"
+                      aria-required="true"
+                      aria-describedby={errors.firstName ? 'careers-firstName-error' : undefined}
                       {...register('firstName', { required: 'First name is required' })}
                       type="text"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.firstName && (
-                      <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
+                      <p id="careers-firstName-error" role="alert" className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="careers-lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Last Name *
                     </label>
                     <input
+                      id="careers-lastName"
+                      aria-label="Last Name"
+                      aria-required="true"
+                      aria-describedby={errors.lastName ? 'careers-lastName-error' : undefined}
                       {...register('lastName', { required: 'Last name is required' })}
                       type="text"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.lastName && (
-                      <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
+                      <p id="careers-lastName-error" role="alert" className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="careers-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Email *
                     </label>
                     <input
+                      id="careers-email"
+                      aria-label="Email Address"
+                      aria-required="true"
+                      aria-describedby={errors.email ? 'careers-email-error' : undefined}
                       {...register('email', {
                         required: 'Email is required',
                         pattern: {
@@ -402,29 +414,37 @@ export default function Careers() {
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                      <p id="careers-email-error" role="alert" className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="careers-phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Phone *
                     </label>
                     <input
+                      id="careers-phone"
+                      aria-label="Phone Number"
+                      aria-required="true"
+                      aria-describedby={errors.phone ? 'careers-phone-error' : undefined}
                       {...register('phone', { required: 'Phone number is required' })}
                       type="tel"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                      <p id="careers-phone-error" role="alert" className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="careers-experience" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Years of Experience *
                   </label>
                   <select
+                    id="careers-experience"
+                    aria-label="Years of Experience"
+                    aria-required="true"
+                    aria-describedby={errors.experience ? 'careers-experience-error' : undefined}
                     {...register('experience', { required: 'Experience is required' })}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
@@ -436,37 +456,42 @@ export default function Careers() {
                     <option value="10+">10+ years</option>
                   </select>
                   {errors.experience && (
-                    <p className="text-red-500 text-sm mt-1">{errors.experience.message}</p>
+                    <p id="careers-experience-error" role="alert" className="text-red-500 text-sm mt-1">{errors.experience.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="careers-coverLetter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Cover Letter *
                   </label>
                   <textarea
+                    id="careers-coverLetter"
+                    aria-label="Cover Letter"
+                    aria-required="true"
+                    aria-describedby={errors.coverLetter ? 'careers-coverLetter-error' : undefined}
                     {...register('coverLetter', { required: 'Cover letter is required' })}
                     rows={4}
                     placeholder="Tell us why you'd be a great fit for this position..."
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                   {errors.coverLetter && (
-                    <p className="text-red-500 text-sm mt-1">{errors.coverLetter.message}</p>
+                    <p id="careers-coverLetter-error" role="alert" className="text-red-500 text-sm mt-1">{errors.coverLetter.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="resume-upload" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Resume (Optional)
                   </label>
                   <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <input
+                      id="resume-upload"
+                      aria-label="Resume file upload"
                       {...register('resume')}
                       type="file"
                       accept=".pdf,.doc,.docx"
                       className="hidden"
-                      id="resume-upload"
                     />
                     <label
                       htmlFor="resume-upload"
@@ -490,6 +515,7 @@ export default function Careers() {
                   </button>
                   <button
                     type="submit"
+                    aria-label="Submit job application"
                     className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
                   >
                     <Send className="w-5 h-5" />

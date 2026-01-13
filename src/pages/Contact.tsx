@@ -156,23 +156,27 @@ export default function Contact() {
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Full Name *
                   </label>
                   <input
                     {...register('name', { required: 'Name is required' })}
+                    id="name"
                     type="text"
+                    aria-label="Full Name"
+                    aria-required="true"
+                    aria-describedby={errors.name ? 'name-error' : undefined}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     placeholder="Your full name"
                   />
                   {errors.name && (
-                    <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                    <p id="name-error" className="text-red-500 text-sm mt-1" role="alert">{errors.name.message}</p>
                   )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Email *
                     </label>
                     <input
@@ -183,21 +187,27 @@ export default function Contact() {
                           message: 'Invalid email address'
                         }
                       })}
+                      id="email"
                       type="email"
+                      aria-label="Email Address"
+                      aria-required="true"
+                      aria-describedby={errors.email ? 'email-error' : undefined}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       placeholder="your@email.com"
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                      <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">{errors.email.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Phone (Optional)
                     </label>
                     <input
                       {...register('phone')}
+                      id="phone"
                       type="tel"
+                      aria-label="Phone Number"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       placeholder="(+254) 712345678"
                     />
@@ -205,11 +215,15 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Inquiry Type *
                   </label>
                   <select
                     {...register('inquiryType', { required: 'Please select an inquiry type' })}
+                    id="inquiryType"
+                    aria-label="Type of Inquiry"
+                    aria-required="true"
+                    aria-describedby={errors.inquiryType ? 'inquiryType-error' : undefined}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Select inquiry type</option>
@@ -220,43 +234,53 @@ export default function Contact() {
                     ))}
                   </select>
                   {errors.inquiryType && (
-                    <p className="text-red-500 text-sm mt-1">{errors.inquiryType.message}</p>
+                    <p id="inquiryType-error" className="text-red-500 text-sm mt-1" role="alert">{errors.inquiryType.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Subject *
                   </label>
                   <input
                     {...register('subject', { required: 'Subject is required' })}
+                    id="subject"
                     type="text"
+                    aria-label="Message Subject"
+                    aria-required="true"
+                    aria-describedby={errors.subject ? 'subject-error' : undefined}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     placeholder="Brief subject line"
                   />
                   {errors.subject && (
-                    <p className="text-red-500 text-sm mt-1">{errors.subject.message}</p>
+                    <p id="subject-error" className="text-red-500 text-sm mt-1" role="alert">{errors.subject.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Message *
                   </label>
                   <textarea
                     {...register('message', { required: 'Message is required' })}
+                    id="message"
                     rows={5}
+                    aria-label="Your Message"
+                    aria-required="true"
+                    aria-describedby={errors.message ? 'message-error' : undefined}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     placeholder="Tell us how we can help you..."
                   />
                   {errors.message && (
-                    <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+                    <p id="message-error" className="text-red-500 text-sm mt-1" role="alert">{errors.message.message}</p>
                   )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  aria-label="Submit contact form"
+                  aria-busy={isSubmitting}
                   className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
