@@ -252,7 +252,7 @@ export default function Footer() {
             <div className="flex items-center text-gray-400 text-sm">
               <span>Made with</span>
               <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" />
-              <span>© 2025 Artisan Bakery. All rights reserved.</span>
+              <span>© 2026 Artisan Bakery. All rights reserved.</span>
             </div>
           </div>
         </div>
