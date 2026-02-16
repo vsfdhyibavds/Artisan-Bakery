@@ -2,6 +2,8 @@
 import ProductManagement from './ProductManagement';
 import CategoryManagement from './CategoryManagement';
 import { motion } from 'framer-motion';
+import { useAuthStore } from '../../stores/authStore';
+import { useNavigate } from 'react-router-dom';
 import {
   ShoppingCart,
   Users,
@@ -9,10 +11,37 @@ import {
   Package,
   AlertTriangle,
   Calendar,
-  Star
+  Star,
+  Lock
 } from 'lucide-react';
 
 const AdminDashboard = () => {
+  const { customer } = useAuthStore();
+  const navigate = useNavigate();
+
+  // Check if user is admin
+  if (!customer?.is_admin) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex items-center justify-center">
+        <div className="max-w-md text-center">
+          <Lock className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Access Denied
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            You don't have permission to access the admin dashboard. Only administrators can view this page.
+          </p>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+          >
+            Return Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Mock data - in real implementation, this would come from API
   const stats = {
     todayOrders: 23,

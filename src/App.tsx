@@ -21,6 +21,7 @@ import Returns from './pages/Returns';
 import Shipping from './pages/Shipping';
 import Orders from './pages/Orders';
 import Profile from './pages/Profile';
+import AdminDashboard from './components/admin/AdminDashboard';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -82,6 +83,8 @@ function App() {
               <Route path="/press" element={<Press />} />
               <Route path="/returns" element={<Returns />} />
               <Route path="/shipping" element={<Shipping />} />
+              {/* Admin Dashboard - requires authentication */}
+              <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
           </main>
           <Footer />

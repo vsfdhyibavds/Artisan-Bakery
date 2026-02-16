@@ -1,0 +1,39 @@
+<svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Oven arc -->
+  <path d="M 150 220 Q 150 120 300 120 Q 450 120 450 220" fill="none" stroke="#3d2817" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Oven door frame -->
+  <rect x="160" y="130" width="280" height="90" fill="#5c3d2e" rx="5"/>
+
+  <!-- Bread loaf -->
+  <ellipse cx="300" cy="160" rx="90" ry="50" fill="#d4a574"/>
+
+  <!-- Bread scoring -->
+  <line x1="220" y1="160" x2="260" y2="145" stroke="#8b6f47" stroke-width="2" opacity="0.6"/>
+  <line x1="280" y1="150" x2="320" y2="145" stroke="#8b6f47" stroke-width="2" opacity="0.6"/>
+  <line x1="340" y1="150" x2="380" y2="160" stroke="#8b6f47" stroke-width="2" opacity="0.6"/>
+
+  <!-- Wheat stalks left -->
+  <g transform="translate(180, 140) rotate(-25)">
+    <line x1="0" y1="0" x2="0" y2="40" stroke="#b8860b" stroke-width="2"/>
+    <circle cx="-3" cy="15" r="3" fill="#b8860b"/>
+    <circle cx="3" cy="20" r="3" fill="#b8860b"/>
+  </g>
+
+  <!-- Wheat stalks right -->
+  <g transform="translate(420, 140) rotate(25)">
+    <line x1="0" y1="0" x2="0" y2="40" stroke="#b8860b" stroke-width="2"/>
+    <circle cx="-3" cy="15" r="3" fill="#b8860b"/>
+    <circle cx="3" cy="20" r="3" fill="#b8860b"/>
+  </g>
+
+  <!-- Title text -->
+  <text x="300" y="280" font-family="serif" font-size="48" font-weight="bold" text-anchor="middle" fill="#3d2817">
+    Artisan Bakery
+  </text>
+
+  <!-- Tagline -->
+  <text x="300" y="310" font-family="serif" font-size="14" text-anchor="middle" fill="#8b6f47" letter-spacing="3">
+    HANDCRAFTED · FRESH · ONLINE
+  </text>
+</svg>

@@ -34,7 +34,7 @@ export default function AuthModal() {
     setLoading(true);
     const success = await signIn(data.email, data.password);
     setLoading(false);
-    
+
     if (success) {
       // Modal will be closed by parent component
     }
@@ -292,7 +292,7 @@ export default function AuthModal() {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Address (Optional - for delivery orders)
             </p>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -345,15 +345,6 @@ export default function AuthModal() {
           </button>
         </motion.form>
       )}
-
-      {/* Demo Mode Notice */}
-      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-        <p className="text-sm text-blue-800 dark:text-blue-200">
-          <strong>Demo Mode:</strong> This is a demonstration. In demo mode, you can explore the interface 
-          without creating a real account. To enable full functionality, configure Supabase using the 
-          "Setup\" button in the header.
-        </p>
-      </div>
     </div>
   );
 }

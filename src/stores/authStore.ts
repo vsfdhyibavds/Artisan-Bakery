@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { User } from '@supabase/supabase-js';
-import { auth, db, getSupabaseStatus } from '../lib/supabase';
+import { auth, db } from '../lib/supabase';
 import toast from 'react-hot-toast';
 
 interface Customer {
@@ -12,6 +12,7 @@ interface Customer {
   address?: string;
   city?: string;
   zip_code?: string;
+  is_admin?: boolean;
 }
 
 interface AuthState {
@@ -145,42 +146,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           }
         }
         keysToRemove.forEach(key => localStorage.removeItem(key));
-      }
-
-      // For demo mode, automatically set up a demo user
-      const supabaseStatus = getSupabaseStatus();
-      if (!supabaseStatus.isConfigured) {
-        // Set up demo user automatically
-        const demoUser = {
-          id: 'demo-user-id',
-          email: 'demo@artisanbakery.com',
-          created_at: new Date().toISOString(),
-          user_metadata: {
-            firstName: 'Demo',
-            lastName: 'User',
-            phone: '(+254) 787943878'
-          }
-        };
-
-        const demoCustomer = {
-          id: 'demo-user-id',
-          first_name: 'Demo',
-          last_name: 'User',
-          email: 'demo@artisanbakery.com',
-          phone: '(+254) 787943878',
-          address: '123 Demo Street',
-          city: 'Demo City',
-          zip_code: '12345',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        set({
-          user: demoUser as any,
-          customer: demoCustomer,
-          loading: false
-        });
-        return;
       }
 
       const { user } = await auth.getCurrentUser();

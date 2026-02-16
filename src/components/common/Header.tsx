@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag, Phone, MapPin, User, LogOut, Database } from 'lucide-react';
+import { Menu, X, Phone, MapPin, User, LogOut } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
-import { getSupabaseStatus } from '../../lib/supabase';
 import CartIcon from './CartIcon';
-import SupabaseSetup from './SupabaseSetup';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -24,8 +22,6 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showSupabaseSetup, setShowSupabaseSetup] = useState(false);
-  const [supabaseStatus, setSupabaseStatus] = useState(getSupabaseStatus());
   const location = useLocation();
   const navigate = useNavigate();
   const { user, customer, signOut } = useAuthStore();
@@ -43,15 +39,6 @@ export default function Header({ onAuthClick }: HeaderProps) {
     setIsOpen(false);
     setShowUserMenu(false);
   }, [location]);
-
-  useEffect(() => {
-    // Update Supabase status periodically
-    const interval = setInterval(() => {
-      setSupabaseStatus(getSupabaseStatus());
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -89,19 +76,6 @@ export default function Header({ onAuthClick }: HeaderProps) {
             <div className="text-accent-300">
               Fresh baked daily since 1985
             </div>
-            {/* Supabase Status Indicator */}
-            <button
-              onClick={() => setShowSupabaseSetup(true)}
-              className={`flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors ${
-                supabaseStatus.isConfigured
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-yellow-600 hover:bg-yellow-700 text-white'
-              }`}
-              title={supabaseStatus.isConfigured ? 'Supabase Connected' : 'Configure Supabase'}
-            >
-              <Database className="w-3 h-3" />
-              {supabaseStatus.isConfigured ? 'DB' : 'Setup'}
-            </button>
           </div>
         </div>
       </div>
@@ -117,18 +91,12 @@ export default function Header({ onAuthClick }: HeaderProps) {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="bg-primary-600 p-2 rounded-lg">
-                <ShoppingBag className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
-                  Artisan Bakery
-                </h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Fresh Baked Daily
-                </p>
-              </div>
+            <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <img
+                src="/logo.svg"
+                alt="Artisan Bakery Logo"
+                className="h-20 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -184,6 +152,17 @@ export default function Header({ onAuthClick }: HeaderProps) {
                         >
                           My Orders
                         </Link>
+                        {customer?.is_admin && (
+                          <>
+                            <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                            <Link
+                              to="/admin"
+                              className="block px-4 py-2 text-sm text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-gray-700 font-medium"
+                            >
+                              📊 Admin Dashboard
+                            </Link>
+                          </>
+                        )}
                         <button
                           onClick={handleSignOut}
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
@@ -306,12 +285,6 @@ export default function Header({ onAuthClick }: HeaderProps) {
           )}
         </AnimatePresence>
       </header>
-
-      {/* Supabase Setup Modal */}
-      <SupabaseSetup
-        isOpen={showSupabaseSetup}
-        onClose={() => setShowSupabaseSetup(false)}
-      />
     </>
   );
 }
