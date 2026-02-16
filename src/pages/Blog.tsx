@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, User, Search, ArrowRight } from 'lucide-react';
 import { formatDate } from '../lib/utils';
+import { useBlogPosts } from '../hooks/useBlogPosts';
 
 interface BlogPost {
   id: string;
@@ -9,14 +10,16 @@ interface BlogPost {
   excerpt: string;
   content: string;
   author: string;
-  date: string;
-  readTime: string;
+  created_at?: string;
+  date?: string;
+  read_time?: string;
+  readTime?: string;
   category: string;
   image: string;
-  tags: string[];
+  tags?: string[];
 }
 
-const blogPosts: BlogPost[] = [
+const fallbackPosts: BlogPost[] = [
   {
     id: '1',
     title: 'The Art of Sourdough: A Beginner\'s Guide',
@@ -91,20 +94,55 @@ const blogPosts: BlogPost[] = [
   }
 ];
 
-const categories = ['All', 'Baking Tips', 'Seasonal', 'Cake Decorating', 'Baking Science', 'Dietary', 'Equipment'];
+
+const baseCategories = ['All', 'Baking Tips', 'Seasonal', 'Cake Decorating', 'Baking Science', 'Dietary', 'Equipment'];
 
 export default function Blog() {
+  const { data: dbPosts = [], isLoading, error } = useBlogPosts();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
-  const filteredPosts = blogPosts.filter(post => {
+  // Use database posts or fallback to demo data
+  const blogPosts = dbPosts.length > 0 ? dbPosts : fallbackPosts;
+
+  // Normalize post data (handle both database and fallback formats)
+  const normalizedPosts = blogPosts.map(post => ({
+    ...post,
+    date: post.date || post.created_at || new Date().toISOString(),
+    readTime: post.readTime || post.read_time || '5 min read',
+    tags: post.tags || []
+  }));
+
+  // Extract unique categories from posts
+  const categories = ['All', ...new Set(normalizedPosts.map(p => p.category).filter(Boolean))];
+
+  const filteredPosts = normalizedPosts.filter(post => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+                         (post.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Failed to load blog posts</h2>
+          <p className="text-gray-600 dark:text-gray-400">Please try again later</p>
+        </div>
+      </div>
+    );
+  }
 
   if (selectedPost) {
     return (

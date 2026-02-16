@@ -2,27 +2,32 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Star, ChefHat, Gift, Heart } from 'lucide-react';
 import { formatDate } from '../lib/utils';
+import { useEvents } from '../hooks/useEvents';
 
 interface Event {
   id: string;
   title: string;
   description: string;
-  date: string;
-  time: string;
-  duration: string;
+  event_date?: string;
+  date?: string;
+  event_time?: string;
+  time?: string;
+  duration?: string;
   location: string;
   price: number;
-  maxParticipants: number;
-  currentParticipants: number;
+  max_participants?: number;
+  maxParticipants?: number;
+  current_participants?: number;
+  currentParticipants?: number;
   instructor: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  category: 'Workshop' | 'Class' | 'Special Event';
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  category?: 'Workshop' | 'Class' | 'Special Event';
   image: string;
-  includes: string[];
+  includes?: string[];
   requirements?: string[];
 }
 
-const events: Event[] = [
+const fallbackEvents: Event[] = [
   {
     id: '1',
     title: 'Sourdough Bread Making Workshop',
@@ -133,19 +138,59 @@ const events: Event[] = [
   }
 ];
 
-const categories = ['All', 'Workshop', 'Class', 'Special Event'];
+
+const baseCategories = ['All', 'Workshop', 'Class', 'Special Event'];
 const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
 export default function Events() {
+  const { data: dbEvents = [], isLoading, error } = useEvents();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const filteredEvents = events.filter(event => {
+  // Use database events or fallback to demo data
+  const events = dbEvents.length > 0 ? dbEvents : fallbackEvents;
+
+  // Normalize event data (handle both database and fallback formats)
+  const normalizedEvents = events.map(event => ({
+    ...event,
+    date: event.date || event.event_date || new Date().toISOString(),
+    time: event.time || event.event_time || '10:00 AM',
+    maxParticipants: event.maxParticipants || event.max_participants || 10,
+    currentParticipants: event.currentParticipants || event.current_participants || 0,
+    difficulty: event.difficulty || 'Beginner',
+    category: event.category || 'Workshop',
+    includes: event.includes || [],
+    requirements: event.requirements || []
+  }));
+
+  // Extract unique categories from events
+  const categories = ['All', ...new Set(normalizedEvents.map(e => e.category).filter(Boolean))];
+
+  const filteredEvents = normalizedEvents.filter(event => {
     const matchesCategory = selectedCategory === 'All' || event.category === selectedCategory;
     const matchesDifficulty = selectedDifficulty === 'All' || event.difficulty === selectedDifficulty;
     return matchesCategory && matchesDifficulty;
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Failed to load events</h2>
+          <p className="text-gray-600 dark:text-gray-400">Please try again later</p>
+        </div>
+      </div>
+    );
+  }
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {

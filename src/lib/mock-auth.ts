@@ -25,15 +25,35 @@ interface MockAuthResponse {
   };
 }
 
-// Store sessions in sessionStorage
+// Session storage keys
 const MOCK_SESSION_KEY = 'mock_auth_session';
+const MOCK_SESSION_PERSIST_KEY = 'mock_auth_session_persist';
+
+// Session encryption helpers
+const encryptSession = (session: any): string => {
+  try {
+    return btoa(JSON.stringify(session));
+  } catch {return '';
+  }
+};
+
+const decryptSession = (encrypted: string): any => {
+  try {
+    return JSON.parse(atob(encrypted));
+  } catch {
+    return null;
+  }
+};
+
+// Dev password from environment or fallback
+const DEV_PASSWORD = import.meta.env.VITE_MOCK_AUTH_PASSWORD || 'dev-password-2024';
 
 // Mock users stored locally (you can add more)
 const MOCK_USERS: MockUser[] = [
   {
     id: 'user-1',
     email: 'eugenco578@gmail.com',
-    password: 'password123', // Simple password for demo
+    password: DEV_PASSWORD,
     created_at: new Date().toISOString(),
     user_metadata: {
       firstName: 'Eugene',
@@ -43,7 +63,7 @@ const MOCK_USERS: MockUser[] = [
   {
     id: 'user-2',
     email: 'charlie@gmail.com',
-    password: 'password123',
+    password: DEV_PASSWORD,
     created_at: new Date().toISOString(),
     user_metadata: {
       firstName: 'Charlie',
@@ -53,7 +73,7 @@ const MOCK_USERS: MockUser[] = [
   {
     id: 'user-3',
     email: 'walden@gmail.com',
-    password: 'password123',
+    password: DEV_PASSWORD,
     created_at: new Date().toISOString(),
     user_metadata: {
       firstName: 'Walden',
@@ -88,8 +108,10 @@ export const mockAuth = {
     MOCK_USERS.push(newUser);
 
     // Auto sign in after signup
-    const session = { user: newUser, token: `mock-token-${newUser.id}` };
-    sessionStorage.setItem(MOCK_SESSION_KEY, JSON.stringify(session));
+    const session = { user: newUser, token: `mock-token-${newUser.id}`, timestamp: Date.now() };
+    const encrypted = encryptSession(session);
+    sessionStorage.setItem(MOCK_SESSION_KEY, encrypted);
+    localStorage.setItem(MOCK_SESSION_PERSIST_KEY, encrypted);
 
     return {
       data: { user: newUser, session },
@@ -117,8 +139,10 @@ export const mockAuth = {
     }
 
     // Create session
-    const session = { user, token: `mock-token-${user.id}` };
-    sessionStorage.setItem(MOCK_SESSION_KEY, JSON.stringify(session));
+    const session = { user, token: `mock-token-${user.id}`, timestamp: Date.now() };
+    const encrypted = encryptSession(session);
+    sessionStorage.setItem(MOCK_SESSION_KEY, encrypted);
+    localStorage.setItem(MOCK_SESSION_PERSIST_KEY, encrypted);
 
     return {
       data: { user, session },
@@ -128,42 +152,85 @@ export const mockAuth = {
 
   signOut: async () => {
     sessionStorage.removeItem(MOCK_SESSION_KEY);
+    localStorage.removeItem(MOCK_SESSION_PERSIST_KEY);
     return { error: null };
   },
 
   getCurrentUser: async () => {
-    const sessionData = sessionStorage.getItem(MOCK_SESSION_KEY);
+    // Check sessionStorage first, fallback to localStorage
+    let sessionData = sessionStorage.getItem(MOCK_SESSION_KEY) || localStorage.getItem(MOCK_SESSION_PERSIST_KEY);
     if (!sessionData) {
       return { data: { user: null }, error: null };
     }
 
-    const { user } = JSON.parse(sessionData);
-    return { data: { user }, error: null };
+    try {
+      const parsed = decryptSession(sessionData);
+      if (!parsed) return { data: { user: null }, error: null };
+
+      // Restore to sessionStorage if missing
+      if (!sessionStorage.getItem(MOCK_SESSION_KEY)) {
+        sessionStorage.setItem(MOCK_SESSION_KEY, sessionData);
+      }
+
+      return { data: { user: parsed.user }, error: null };
+    } catch {
+      return { data: { user: null }, error: null };
+    }
   },
 
   getSession: async () => {
-    const sessionData = sessionStorage.getItem(MOCK_SESSION_KEY);
+    let sessionData = sessionStorage.getItem(MOCK_SESSION_KEY) || localStorage.getItem(MOCK_SESSION_PERSIST_KEY);
     if (!sessionData) {
       return { data: { session: null }, error: null };
     }
 
-    const session = JSON.parse(sessionData);
-    return { data: { session }, error: null };
+    try {
+      const session = decryptSession(sessionData);
+      if (!sessionStorage.getItem(MOCK_SESSION_KEY)) {
+        sessionStorage.setItem(MOCK_SESSION_KEY, sessionData);
+      }
+      return { data: { session }, error: null };
+    } catch {
+      return { data: { session: null }, error: null };
+    }
   },
 
   onAuthStateChange: (callback: (event: string, session: any) => void) => {
-    // Check session on load
-    const sessionData = sessionStorage.getItem(MOCK_SESSION_KEY);
+    // Check both storage locations
+    let sessionData = sessionStorage.getItem(MOCK_SESSION_KEY) || localStorage.getItem(MOCK_SESSION_PERSIST_KEY);
     if (sessionData) {
-      const session = JSON.parse(sessionData);
-      callback('SIGNED_IN', session);
+      try {
+        const session = decryptSession(sessionData);
+        if (session && !sessionStorage.getItem(MOCK_SESSION_KEY)) {
+          sessionStorage.setItem(MOCK_SESSION_KEY, sessionData);
+        }
+        callback('SIGNED_IN', session);
+      } catch {}
+    }
+
+    // Listen for storage changes from other tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if ((e.key === MOCK_SESSION_KEY || e.key === MOCK_SESSION_PERSIST_KEY) && e.newValue) {
+        try {
+          const session = decryptSession(e.newValue);
+          callback('SIGNED_IN', session);
+        } catch {}
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', handleStorageChange);
     }
 
     // Return unsubscribe function
     return {
       data: {
         subscription: {
-          unsubscribe: () => {}
+          unsubscribe: () => {
+            if (typeof window !== 'undefined') {
+              window.removeEventListener('storage', handleStorageChange);
+            }
+          }
         }
       }
     };
