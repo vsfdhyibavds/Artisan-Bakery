@@ -122,7 +122,7 @@ class SupabaseManager {
         getSession: mockAuth.getSession,
         onAuthStateChange: mockAuth.onAuthStateChange
       },
-      from: (table: string) => ({
+      from: (_table: string) => ({
         select: () => ({
           eq: () => ({
             single: () => Promise.resolve({ data: null, error: null }),

@@ -349,6 +349,32 @@ export const db = {
     }
   },
 
+  // Get all newsletter subscribers (for admin)
+  getNewsletterSubscribers: async () => {
+    try {
+      const { data, error } = await supabase
+        .from('newsletter_subscribers')
+        .select('*')
+        .order('created_at', { ascending: false });
+      return { data: data || [], error };
+    } catch (err) {
+      return { data: [], error: { message: 'Database service unavailable' } };
+    }
+  },
+
+  // Delete newsletter subscriber (for admin)
+  deleteNewsletterSubscriber: async (subscriberId: string) => {
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscribers')
+        .delete()
+        .eq('id', subscriberId);
+      return { error };
+    } catch (err) {
+      return { error: { message: 'Database service unavailable' } };
+    }
+  },
+
   // Custom cakes
   createCustomCake: async (cakeData: any) => {
     try {
