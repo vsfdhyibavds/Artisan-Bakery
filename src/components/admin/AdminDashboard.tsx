@@ -2,6 +2,8 @@
 import ProductManagement from './ProductManagement';
 import CategoryManagement from './CategoryManagement';
 import NewsletterManagement from './NewsletterManagement';
+import BlogManagement from './BlogManagement';
+import EventManagement from './EventManagement';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../../stores/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -221,6 +223,8 @@ const AdminDashboard = () => {
       <div className="max-w-7xl mx-auto mt-12 space-y-12">
         <ProductManagement />
         <CategoryManagement />
+        <BlogManagement />
+        <EventManagement />
         <NewsletterManagement />
       </div>
   </div>

@@ -16,6 +16,7 @@
     "setup": "chmod +x scripts/setup.sh && ./scripts/setup.sh"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^8.7.0",
     "@supabase/supabase-js": "^2.54.0",
     "@tanstack/react-query": "^5.17.9",
     "@types/react-toastify": "^4.0.2",

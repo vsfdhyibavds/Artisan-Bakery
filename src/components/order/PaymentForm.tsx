@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Lock, AlertCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useOrderManagement } from '../../hooks/useOrderManagement';
 import { formatPrice } from '../../lib/utils';
+import { getStripe, createPaymentIntent, processPayment, formatAmountForStripe } from '../../lib/stripe';
+import toast from 'react-hot-toast';
+import { RateLimiter } from '../../lib/rate-limiter';
 
 interface PaymentFormProps {
   orderData: {
@@ -16,6 +19,8 @@ interface PaymentFormProps {
       city: string;
       zipCode: string;
     };
+    customerEmail?: string;
+    customerName?: string;
   };
   total: number;
   onSuccess: () => void;
@@ -32,29 +37,90 @@ interface PaymentFormData {
   billingZip: string;
 }
 
+const paymentRateLimiter = new RateLimiter('order', { windowMs: 5000, maxRequests: 1 });
+
 export default function PaymentForm({ orderData, total, onSuccess, onBack }: PaymentFormProps) {
   const [processing, setProcessing] = useState(false);
+  const [stripeReady, setStripeReady] = useState(false);
+  const [useStripe, setUseStripe] = useState(false);
   const { createOrder } = useOrderManagement();
   const { register, handleSubmit, formState: { errors } } = useForm<PaymentFormData>();
 
+  // Initialize Stripe
+  useEffect(() => {
+    const initStripe = async () => {
+      const stripe = await getStripe();
+      setStripeReady(!!stripe);
+      setUseStripe(!!stripe);
+    };
+    initStripe();
+  }, []);
+
   const onSubmit = async (data: PaymentFormData) => {
-  setProcessing(true);
-  // 'data' contains the payment form values. Use it for payment processing in a real implementation.
+    // Rate limiting
+    if (!paymentRateLimiter.isAllowed()) {
+      const waitTime = paymentRateLimiter.getResetTimeSeconds();
+      toast.error(`Please wait ${waitTime} seconds before trying again`);
+      return;
+    }
+
+    setProcessing(true);
 
     try {
-      // In a real implementation, you would tokenize the card with Stripe
-      // and get a payment method ID. For demo purposes, we'll use a mock ID.
-      const mockPaymentMethodId = `pm_${Math.random().toString(36).substr(2, 9)}`;
+      if (useStripe && stripeReady) {
+        // Use Stripe payment processing
+        const stripe = await getStripe();
+        if (!stripe) {
+          throw new Error('Stripe not available');
+        }
 
-      await createOrder.mutateAsync({
-        ...orderData,
-        ...data, // include payment form data to use the variable
-        paymentMethodId: mockPaymentMethodId
-      });
+        // Create payment intent
+        const email = orderData.customerEmail || 'customer@example.com';
+        const intent = await createPaymentIntent(
+          formatAmountForStripe(total),
+          email,
+          `order_${Date.now()}`
+        );
 
-      onSuccess();
+        // For now, we'll simulate Stripe Elements processing
+        // In a real app, you'd use @stripe/react-stripe-js with CardElement
+        const result = await processPayment(
+          stripe,
+          { getElement: () => null }, // Mock elements object
+          intent.clientSecret,
+          email
+        );
+
+        if (result.success) {
+          // Create order with successful payment
+          await createOrder.mutateAsync({
+            ...orderData,
+            paymentMethodId: result.paymentIntentId,
+            paymentMethod: 'stripe',
+            status: 'paid'
+          });
+          toast.success('Payment processed successfully!');
+          onSuccess();
+        } else {
+          throw new Error(result.error || 'Payment failed');
+        }
+      } else {
+        // Fallback: Use mock payment processing
+        const mockPaymentMethodId = `pm_${Math.random().toString(36).substr(2, 9)}`;
+
+        await createOrder.mutateAsync({
+          ...orderData,
+          paymentMethodId: mockPaymentMethodId,
+          paymentMethod: 'mock',
+          status: 'confirmed'
+        });
+        toast.success('Order confirmed! (Test mode)');
+        onSuccess();
+      }
     } catch (error) {
-      console.error('Payment failed:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Payment failed';
+      console.error('Payment error:', error);
+      toast.error(errorMsg);
     } finally {
       setProcessing(false);
     }
@@ -75,7 +141,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
             Secure Payment
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Your payment information is encrypted and secure
+            Your payment information is encrypted and secure {useStripe ? '(Stripe)' : '(Test Mode)'}
           </p>
         </div>
       </div>
@@ -245,7 +311,7 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
                 Secure Payment Processing
               </p>
               <p className="text-sm text-blue-600 dark:text-blue-300">
-                Your payment is processed securely using industry-standard encryption.
+                Your payment is processed securely using {useStripe ? 'Stripe' : 'test'} encryption.
                 We never store your card information.
               </p>
             </div>
@@ -283,3 +349,4 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
     </motion.div>
   );
 }
+

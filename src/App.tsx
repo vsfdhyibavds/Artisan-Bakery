@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
@@ -11,18 +11,20 @@ import Home from './pages/Home';
 import Menu from './pages/Menu';
 import About from './pages/About';
 import Order from './pages/Order';
-import Blog from './pages/Blog';
-import Events from './pages/Events';
-import Contact from './pages/Contact';
-import Careers from './pages/Careers';
-import Catering from './pages/Catering';
-import FAQ from './pages/FAQ';
-import Press from './pages/Press';
-import Returns from './pages/Returns';
-import Shipping from './pages/Shipping';
-import Orders from './pages/Orders';
-import Profile from './pages/Profile';
-import AdminDashboard from './components/admin/AdminDashboard';
+
+// Lazy load all non-critical pages
+const Blog = lazy(() => import('./pages/Blog'));
+const Events = lazy(() => import('./pages/Events'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Catering = lazy(() => import('./pages/Catering'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const Press = lazy(() => import('./pages/Press'));
+const Returns = lazy(() => import('./pages/Returns'));
+const Shipping = lazy(() => import('./pages/Shipping'));
+const Orders = lazy(() => import('./pages/Orders'));
+const Profile = lazy(() => import('./pages/Profile'));
+const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +56,13 @@ function App() {
     setAuthModalOpen(false);
   };
 
+  // Loading fallback for lazy-loaded route components
+  const RouteLoadingFallback = () => (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
@@ -69,25 +78,27 @@ function App() {
           <div className="min-h-screen bg-white dark:bg-gray-900">
             <Header onAuthClick={openAuthModal} />
             <main>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/menu" element={<Menu />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/order" element={<Order />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/events" element={<Events />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/catering" element={<Catering />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/press" element={<Press />} />
-                <Route path="/returns" element={<Returns />} />
-                <Route path="/shipping" element={<Shipping />} />
-                {/* Admin Dashboard - requires authentication */}
-                <Route path="/admin" element={<AdminDashboard />} />
-              </Routes>
+              <Suspense fallback={<RouteLoadingFallback />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/menu" element={<Menu />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/order" element={<Order />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/events" element={<Events />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/careers" element={<Careers />} />
+                  <Route path="/catering" element={<Catering />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/press" element={<Press />} />
+                  <Route path="/returns" element={<Returns />} />
+                  <Route path="/shipping" element={<Shipping />} />
+                  {/* Admin Dashboard - requires authentication */}
+                  <Route path="/admin" element={<AdminDashboard />} />
+                </Routes>
+              </Suspense>
             </main>
           <Footer />
 
