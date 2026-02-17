@@ -35,8 +35,13 @@ const queryClient = new QueryClient({
   },
 });
 
+interface HeaderProps {
+  onAuthClick: (mode: 'signin' | 'signup') => void;
+}
+
 function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   const { initialize, loading } = useAuthStore();
 
@@ -45,6 +50,11 @@ function App() {
   }, [initialize]);
 
   const openAuthModal = () => {
+    setAuthModalOpen(true);
+  };
+
+  const openAuthModalWithMode = (mode: 'signin' | 'signup') => {
+    setAuthMode(mode);
     setAuthModalOpen(true);
   };
 
@@ -76,7 +86,7 @@ function App() {
       <LoadingProvider>
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="min-h-screen bg-white dark:bg-gray-900">
-            <Header onAuthClick={openAuthModal} />
+            <Header onAuthClick={openAuthModalWithMode} />
             <main>
               <Suspense fallback={<RouteLoadingFallback />}>
                 <Routes>
@@ -124,7 +134,7 @@ function App() {
                 >
                   ×
                 </button>
-                <AuthModal />
+                <AuthModal initialMode={authMode} />
               </div>
             </div>
           )}

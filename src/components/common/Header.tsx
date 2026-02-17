@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Phone, MapPin, User, LogOut } from 'lucide-react';
+import { Menu, X, Phone, MapPin, User, LogOut, Moon, Sun } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import CartIcon from './CartIcon';
 
@@ -22,9 +22,29 @@ export default function Header({ onAuthClick }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Check localStorage first, then system preference
+    const stored = localStorage.getItem('darkMode');
+    if (stored !== null) return stored === 'true';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const location = useLocation();
   const navigate = useNavigate();
   const { user, customer, signOut } = useAuthStore();
+
+  useEffect(() => {
+    // Update document class and localStorage when dark mode changes
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', String(isDarkMode));
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,6 +138,18 @@ export default function Header({ onAuthClick }: HeaderProps) {
 
             {/* Right Side Actions */}
             <div className="hidden md:flex items-center space-x-4">
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              >
+                {isDarkMode ? (
+                  <Sun className="w-5 h-5 text-yellow-500" />
+                ) : (
+                  <Moon className="w-5 h-5 text-gray-700" />
+                )}
+              </button>
+
               <CartIcon onClick={handleCartClick} />
 
               {user ? (
@@ -232,6 +264,26 @@ export default function Header({ onAuthClick }: HeaderProps) {
                     {item.name}
                   </Link>
                 ))}
+
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                  <button
+                    onClick={toggleDarkMode}
+                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {isDarkMode ? (
+                      <>
+                        <Sun className="w-5 h-5 text-yellow-500" />
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Light</span>
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="w-5 h-5 text-gray-700" />
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Dark</span>
+                      </>
+                    )}
+                  </button>
+                </div>
 
                 {user ? (
                   <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">

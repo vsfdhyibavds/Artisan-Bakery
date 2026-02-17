@@ -63,19 +63,32 @@ const contactInfo = [
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitMessage, setSubmitMessage] = useState('');
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactForm>();
 
   const onSubmit = async (data: ContactForm) => {
     setIsSubmitting(true);
+    setSubmitStatus('idle');
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      // Simulate form submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-    console.log('Contact form submitted:', data);
-    alert('Thank you for your message! We will get back to you within 24 hours.');
+      console.log('Contact form submitted:', data);
+      setSubmitStatus('success');
+      setSubmitMessage('Thank you for your message! We will get back to you within 24 hours.');
 
-    reset();
-    setIsSubmitting(false);
+      reset();
+
+      // Clear success message after 5 seconds
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    } catch (error) {
+      setSubmitStatus('error');
+      setSubmitMessage('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -153,6 +166,36 @@ export default function Contact() {
                   Send us a Message
                 </h2>
               </div>
+
+              {submitStatus === 'success' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-start gap-3"
+                  role="status"
+                >
+                  <div className="text-2xl">✓</div>
+                  <div>
+                    <p className="font-semibold">Message Sent!</p>
+                    <p className="text-sm">{submitMessage}</p>
+                  </div>
+                </motion.div>
+              )}
+
+              {submitStatus === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-start gap-3"
+                  role="alert"
+                >
+                  <div className="text-2xl">✕</div>
+                  <div>
+                    <p className="font-semibold">Error</p>
+                    <p className="text-sm">{submitMessage}</p>
+                  </div>
+                </motion.div>
+              )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div>

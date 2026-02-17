@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Plus, Minus, Calendar, Clock, CreditCard } from 'lucide-react'; // Removed unused MapPin
+import { ShoppingCart, Plus, Minus, Calendar, Clock, CreditCard } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import OrderForm from '../components/order/OrderForm';
 import CakeBuilder from '../components/order/CakeBuilder';
 import { formatPrice } from '../lib/utils';
@@ -18,22 +19,8 @@ export default function Order() {
   const [orderType, setOrderType] = useState('pickup');
   const [currentStep, setCurrentStep] = useState(1);
   const [showCakeBuilder, setShowCakeBuilder] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: '1',
-      name: 'Artisan Sourdough Loaf',
-      price: 8.50,
-      quantity: 2,
-      image: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=200',
-    },
-    {
-      id: '2',
-      name: 'Pain au Chocolat',
-      price: 3.75,
-      quantity: 4,
-      image: 'https://images.pexels.com/photos/2135/food-france-morning-breakfast.jpg?auto=compress&cs=tinysrgb&w=200',
-    },
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const navigate = useNavigate();
 
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity === 0) {
@@ -191,7 +178,10 @@ export default function Order() {
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
                           Add some delicious items to get started
                         </p>
-                        <button className="btn-primary">
+                        <button
+                          onClick={() => navigate('/menu')}
+                          className="btn-primary"
+                        >
                           Browse Menu
                         </button>
                       </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, ShoppingCart, Leaf, ChevronUp } from 'lucide-react';
+import { Search, Filter, ShoppingCart, Leaf, ChevronUp, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { products } from '../data/products';
 import ProductCard from '../components/menu/ProductCard';
@@ -12,6 +12,13 @@ const categories = [
   { id: 'cake', name: 'Cakes', icon: null },
   { id: 'cookie', name: 'Cookies', icon: null },
   { id: 'gluten-free', name: 'Gluten-Free', icon: Leaf },
+];
+
+const allergenOptions = [
+  { id: 'gluten', label: 'Gluten-Free' },
+  { id: 'dairy', label: 'Dairy-Free' },
+  { id: 'nuts', label: 'Nut-Free' },
+  { id: 'eggs', label: 'Egg-Free' },
 ];
 
 const sortOptions = [
@@ -27,6 +34,7 @@ export default function Menu() {
   const [sortBy, setSortBy] = useState('name');
   const [showFilters, setShowFilters] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const navigate = useNavigate();
 
   // Auto-scroll tracking
@@ -69,6 +77,16 @@ export default function Menu() {
       );
     }
 
+    // Filter by allergens (exclude products that contain selected allergens)
+    if (selectedAllergens.length > 0) {
+      filtered = filtered.filter(product => {
+        const productAllergens = (product.allergens || []).map(a => a.toLowerCase());
+        return !selectedAllergens.some(allergen =>
+          productAllergens.includes(allergen.toLowerCase())
+        );
+      });
+    }
+
     // Sort products
     switch (sortBy) {
       case 'price-low':
@@ -85,7 +103,15 @@ export default function Menu() {
     }
 
     return filtered;
-  }, [selectedCategory, searchQuery, sortBy]);
+  }, [selectedCategory, searchQuery, sortBy, selectedAllergens]);
+
+  const toggleAllergen = (allergen: string) => {
+    setSelectedAllergens(prev =>
+      prev.includes(allergen)
+        ? prev.filter(a => a !== allergen)
+        : [...prev, allergen]
+    );
+  };
 
   const handleCustomOrder = () => {
     navigate('/contact');
@@ -98,6 +124,7 @@ export default function Menu() {
   const clearFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
+    setSelectedAllergens([]);
   };
 
   return (
@@ -246,6 +273,50 @@ export default function Menu() {
               </button>
             </div>
           </div>
+
+          {/* Allergen Filters */}
+          <AnimatePresence>
+            {(showFilters || window.innerWidth >= 1024) && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+              >
+                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 text-amber-500" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Filter by dietary needs:
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {allergenOptions.map((allergen) => (
+                      <button
+                        key={allergen.id}
+                        onClick={() => toggleAllergen(allergen.id)}
+                        className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                          selectedAllergens.includes(allergen.id)
+                            ? 'bg-amber-500 text-white'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                        }`}
+                      >
+                        {allergen.label}
+                      </button>
+                    ))}
+                  </div>
+                  {(searchQuery || selectedCategory !== 'all' || selectedAllergens.length > 0) && (
+                    <button
+                      onClick={clearFilters}
+                      className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                    >
+                      Clear all filters
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
@@ -359,7 +430,7 @@ export default function Menu() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-12"
+                className="text-center py-16"
               >
                 <div className="text-gray-400 mb-4">
                   <Search className="w-16 h-16 mx-auto mb-4" />
@@ -367,12 +438,17 @@ export default function Menu() {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   No products found
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Try adjusting your search or filter criteria
+                <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                  {selectedAllergens.length > 0
+                    ? "We couldn't find any products matching your dietary requirements. Try selecting different filters."
+                    : searchQuery
+                      ? "We couldn't find any products matching your search. Try different keywords or browse our categories."
+                      : "No products available in this category."
+                  }
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="btn-primary"
+                  className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Clear Filters
                 </button>
