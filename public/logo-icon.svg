@@ -1,0 +1,60 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .icon-bg { fill: #f5f1e8; }
+      .icon-ornate { fill: #c9a961; stroke: #a67c3a; stroke-width: 0.6; }
+      .icon-wheat { fill: #d4a855; stroke: #a67c3a; stroke-width: 0.4; }
+      .icon-bread { fill: #a67c3a; stroke: #6b5428; stroke-width: 0.5; }
+      .icon-bread-light { fill: #c9a961; stroke: #8b6f3d; stroke-width: 0.3; }
+    </style>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" class="icon-bg"/>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#c9a961" stroke-width="1" opacity="0.4"/>
+
+  <!-- Small top flourish -->
+  <g transform="translate(100, 20)">
+    <path d="M 0 0 Q 8 -8, 15 -5 Q 8 0, 0 5 Q -8 0, -15 -5 Q -8, -8, 0, 0" class="icon-ornate"/>
+    <circle cx="0" cy="-8" r="1.5" class="icon-ornate"/>
+  </g>
+
+  <!-- Left wheat -->
+  <g transform="translate(45, 70)">
+    <path d="M 0 0 Q -2 12, -4 25" stroke="#8b6f3d" stroke-width="1" fill="none"/>
+    <ellipse cx="-4" cy="12" rx="2.5" ry="4" transform="rotate(-25 -4 12)" class="icon-wheat"/>
+    <ellipse cx="-3" cy="20" rx="2.5" ry="4" transform="rotate(20 -3 20)" class="icon-wheat"/>
+  </g>
+
+  <!-- Right wheat -->
+  <g transform="translate(155, 70) scale(-1, 1)">
+    <path d="M 0 0 Q -2 12, -4 25" stroke="#8b6f3d" stroke-width="1" fill="none"/>
+    <ellipse cx="-4" cy="12" rx="2.5" ry="4" transform="rotate(-25 -4 12)" class="icon-wheat"/>
+    <ellipse cx="-3" cy="20" rx="2.5" ry="4" transform="rotate(20 -3 20)" class="icon-wheat"/>
+  </g>
+
+  <!-- Center bread group -->
+  <!-- Small flour sack -->
+  <ellipse cx="70" cy="95" rx="14" ry="18" class="icon-bread" opacity="0.75"/>
+  <path d="M 60 80 Q 70 77, 80 80" class="icon-bread-light" opacity="0.6"/>
+
+  <!-- Center oval bread -->
+  <ellipse cx="100" cy="105" rx="24" ry="18" class="icon-bread"/>
+  <path d="M 82 95 Q 100 88, 118 95" class="icon-bread-light" opacity="0.6"/>
+  <path d="M 85 105 Q 100 115, 115 105" stroke="#5a3f1f" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+  <!-- Right round bread -->
+  <ellipse cx="130" cy="100" rx="16" ry="16" class="icon-bread"/>
+  <path d="M 118 92 Q 130 85, 142 92" class="icon-bread-light" opacity="0.5"/>
+
+  <!-- Grain scattered -->
+  <g fill="#c9a961" opacity="0.4">
+    <ellipse cx="70" cy="135" rx="1.5" ry="2.5" transform="rotate(45 70 135)"/>
+    <ellipse cx="100" cy="140" rx="1.5" ry="2.5" transform="rotate(-30 100 140)"/>
+    <ellipse cx="130" cy="138" rx="1.5" ry="2.5" transform="rotate(60 130 138)"/>
+  </g>
+
+  <!-- Decorative dots -->
+  <circle cx="85" cy="125" r="1" fill="#a67c3a" opacity="0.6"/>
+  <circle cx="115" cy="125" r="1" fill="#a67c3a" opacity="0.6"/>
+</svg>

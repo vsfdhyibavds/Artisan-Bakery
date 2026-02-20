@@ -113,9 +113,9 @@ export default function Header({ onAuthClick }: HeaderProps) {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <img
-                src="/logo.svg"
+                src="/logo.png"
                 alt="Artisan Bakery Logo"
-                className="h-20 w-auto"
+                className="h-16 w-auto"
               />
             </Link>
 

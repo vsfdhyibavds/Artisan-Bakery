@@ -1,0 +1,226 @@
+<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .cream-bg { fill: #f5f1e8; }
+      .ornate { fill: #c9a961; stroke: #a67c3a; stroke-width: 0.5; }
+      .text-artisan { font-family: 'Brush Script MT', 'Lucida Handwriting', cursive; font-size: 32px; fill: #3d2817; font-style: italic; font-weight: 300; }
+      .text-bakery { font-family: 'Georgia', serif; font-size: 28px; fill: #2b1a0f; font-weight: bold; letter-spacing: 1px; }
+      .wheat { fill: #d4a855; stroke: #a67c3a; stroke-width: 0.5; }
+      .bread { fill: #a67c3a; stroke: #6b5428; stroke-width: 0.6; }
+      .bread-light { fill: #c9a961; stroke: #8b6f3d; stroke-width: 0.4; }
+    </style>
+
+    <symbol id="flourish-top-vert" viewBox="0 0 60 40">
+      <path d="M 10 35 Q 20 25, 30 20 Q 40 25, 50 35" class="ornate"/>
+      <circle cx="30" cy="15" r="2.5" class="ornate"/>
+    </symbol>
+
+    <symbol id="wheat-vert" viewBox="0 0 25 60">
+      <path d="M 12 0 Q 11 15, 10 30 Q 9 45, 8 60" stroke="#8b6f3d" stroke-width="1.2" fill="none"/>
+      <g class="wheat">
+        <ellipse cx="8" cy="12" rx="3" ry="5" transform="rotate(-25 8 12)"/>
+        <ellipse cx="9" cy="22" rx="3" ry="5" transform="rotate(-20 9 22)"/>
+        <ellipse cx="10" cy="32" rx="3" ry="5" transform="rotate(-15 10 32)"/>
+        <ellipse cx="12" cy="18" rx="3" ry="5" transform="rotate(25 12 18)"/>
+        <ellipse cx="14" cy="28" rx="3" ry="5" transform="rotate(20 14 28)"/>
+        <ellipse cx="15" cy="38" rx="3" ry="5" transform="rotate(15 15 38)"/>
+      </g>
+    </symbol>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" class="cream-bg"/>
+
+  <!-- Top flourish -->
+  <g transform="translate(150, 30)">
+    <use href="#flourish-top-vert"/>
+  </g>
+
+  <!-- Left wheat -->
+  <g transform="translate(40, 80)">
+    <use href="#wheat-vert"/>
+  </g>
+
+  <!-- Right wheat -->
+  <g transform="translate(260, 80) scale(-1, 1)">
+    <use href="#wheat-vert"/>
+  </g>
+
+  <!-- Flour sack -->
+  <ellipse cx="150" cy="160" rx="28" ry="32" class="bread" opacity="0.8"/>
+  <path d="M 130 135 Q 145 130, 160 130 Q 175 130, 170 135" class="bread-light"/>
+  <line x1="140" y1="130" x2="132" y2="158" stroke="#8b6f3d" stroke-width="0.8"/>
+  <line x1="170" y1="132" x2="168" y2="160" stroke="#8b6f3d" stroke-width="0.8"/>
+
+  <!-- Left round bread -->
+  <circle cx="100" cy="210" r="32" class="bread"/>
+  <path d="M 78 185 Q 100 172, 122 185" class="bread-light" opacity="0.6"/>
+  <path d="M 85 200 Q 100 215, 115 200" stroke="#5a3f1f" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+  <!-- Center oval bread -->
+  <ellipse cx="150" cy="225" rx="38" ry="30" class="bread"/>
+  <path d="M 120 200 Q 150 185, 180 200" class="bread-light" opacity="0.6"/>
+  <path d="M 128 215 Q 150 230, 172 215" stroke="#5a3f1f" stroke-width="2" fill="none" opacity="0.8"/>
+
+  <!-- Right round bread -->
+  <circle cx="200" cy="210" r="30" class="bread"/>
+  <path d="M 180 188 Q 200 175, 220 188" class="bread-light" opacity="0.6"/>
+  <path d="M 182 203 Q 200 218, 218 203" stroke="#5a3f1f" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+  <!-- Grain scattered -->
+  <g fill="#c9a961" opacity="0.5">
+    <ellipse cx="85" cy="270" rx="2.5" ry="4" transform="rotate(45 85 270)"/>
+    <ellipse cx="120" cy="275" rx="2.5" ry="4" transform="rotate(-30 120 275)"/>
+    <ellipse cx="150" cy="280" rx="2.5" ry="4" transform="rotate(60 150 280)"/>
+    <ellipse cx="180" cy="275" rx="2.5" ry="4" transform="rotate(-20 180 275)"/>
+    <ellipse cx="215" cy="270" rx="2.5" ry="4" transform="rotate(40 215 270)"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="150" y="310" class="text-artisan" text-anchor="middle">Artisan</text>
+  <text x="150" y="350" class="text-bakery" text-anchor="middle">BAKERY</text>
+
+  <!-- Decorative dots -->
+  <circle cx="130" cy="325" r="1.5" fill="#a67c3a"/>
+  <circle cx="170" cy="325" r="1.5" fill="#a67c3a"/>
+
+  <defs>
+    <!-- Premium Bread Gradients -->
+    <linearGradient id="breadTopVert" x1="0%" y1="0%" x2="0%" y2="50%">
+      <stop offset="0%" style="stop-color:#e8c799;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4a574;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="breadBottomVert" x1="0%" y1="50%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b8865a;stop-opacity:1" />
+    </linearGradient>
+
+    <radialGradient id="breadShineVert" cx="40%" cy="30%" r="45%">
+      <stop offset="0%" style="stop-color:#f5dca8;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#d4a574;stop-opacity:0" />
+    </radialGradient>
+
+    <linearGradient id="crustDetailVert" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b6f47;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#5c4a33;stop-opacity:0.5" />
+    </linearGradient>
+
+    <!-- Oven Gradient -->
+    <radialGradient id="ovenDarkVert" cx="45%" cy="30%" r="60%">
+      <stop offset="0%" style="stop-color:#5a4633;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a1f18;stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Wheat Gradients -->
+    <linearGradient id="wheatGoldVert" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e6c200;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#daa520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c9992f;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Shadows and Effects -->
+    <filter id="deepShadowVert">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.25"/>
+    </filter>
+
+    <filter id="softShadowVert">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+
+    <filter id="innerShadowVert">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" fill="#faf8f5"/>
+
+  <!-- Oven - Centered and adjusted for vertical layout -->
+  <g filter="url(#deepShadowVert)">
+    <!-- Oven body -->
+    <rect x="65" y="30" width="170" height="120" rx="8" fill="url(#ovenDarkVert)"/>
+
+    <!-- Oven door outer frame -->
+    <rect x="75" y="50" width="150" height="80" rx="6" fill="#2a1f18"/>
+    <rect x="78" y="53" width="144" height="74" rx="5" fill="#4a3728"/>
+
+    <!-- Glass effect -->
+    <rect x="82" y="57" width="136" height="66" rx="3" fill="#5a4633" opacity="0.8"/>
+    <rect x="85" y="60" width="130" height="10" fill="#fff" opacity="0.3"/>
+
+    <!-- Glass reflection -->
+    <ellipse cx="120" cy="80" rx="35" ry="18" fill="#fff" opacity="0.15"/>
+  </g>
+
+  <!-- Artisan Bread - Centered -->
+  <g filter="url(#softShadowVert)">
+    <!-- Bread loaf -->
+    <ellipse cx="150" cy="190" rx="55" ry="60" fill="url(#breadTopVert)"/>
+    <ellipse cx="150" cy="220" rx="55" ry="40" fill="url(#breadBottomVert)"/>
+
+    <!-- Bread shine -->
+    <ellipse cx="130" cy="170" rx="30" ry="25" fill="url(#breadShineVert)"/>
+
+    <!-- Scoring marks -->
+    <path d="M 120 180 Q 130 175 140 180" stroke="#8b6f47" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <path d="M 140 195 Q 150 189 160 195" stroke="#8b6f47" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <path d="M 125 215 Q 150 210 175 215" stroke="#8b6f47" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+    <!-- Crust texture overlay -->
+    <ellipse cx="150" cy="190" rx="55" ry="60" fill="url(#crustDetailVert)" opacity="0.4"/>
+  </g>
+
+  <!-- Wheat Stalks - Bottom section -->
+  <g filter="url(#softShadowVert)">
+    <!-- Left stalk -->
+    <path d="M 95 280 Q 85 260 80 235" stroke="#8b7355" stroke-width="2.5" fill="none"/>
+    <circle cx="78" cy="230" r="3" fill="url(#wheatGoldVert)"/>
+    <circle cx="80" cy="225" r="2.5" fill="#e6c200" opacity="0.8"/>
+    <circle cx="76" cy="225" r="2.5" fill="#e6c200" opacity="0.8"/>
+
+    <!-- Center stalk -->
+    <path d="M 150 285 Q 150 260 150 230" stroke="#8b7355" stroke-width="2.5" fill="none"/>
+    <circle cx="150" cy="225" r="3.5" fill="url(#wheatGoldVert)"/>
+    <circle cx="150" cy="218" r="3" fill="#e6c200" opacity="0.8"/>
+    <circle cx="147" cy="218" r="2.5" fill="#e6c200" opacity="0.8"/>
+    <circle cx="153" cy="218" r="2.5" fill="#e6c200" opacity="0.8"/>
+
+    <!-- Right stalk -->
+    <path d="M 205 280 Q 215 260 220 235" stroke="#8b7355" stroke-width="2.5" fill="none"/>
+    <circle cx="222" cy="230" r="3" fill="url(#wheatGoldVert)"/>
+    <circle cx="220" cy="225" r="2.5" fill="#e6c200" opacity="0.8"/>
+    <circle cx="224" cy="225" r="2.5" fill="#e6c200" opacity="0.8"/>
+  </g>
+
+  <!-- Premium Typography - Vertical layout -->
+  <text x="150" y="330" font-family="Georgia, serif" font-size="42" font-weight="bold"
+        text-anchor="middle" fill="#2d1f17" letter-spacing="2">
+    Artisan Bakery
+  </text>
+
+  <text x="150" y="360" font-family="Georgia, serif" font-size="11" font-weight="normal"
+        text-anchor="middle" fill="#8b7355" font-variant="small-caps" letter-spacing="1">
+    Handcrafted Excellence
+  </text>
+  <text x="150" y="378" font-family="Georgia, serif" font-size="11" font-weight="normal"
+        text-anchor="middle" fill="#a0937e" letter-spacing="1">
+    Since 1985
+  </text>
+
+  <!-- Subtle brand mark -->
+  <g opacity="0.15">
+    <text x="150" y="395" font-family="Georgia, serif" font-size="10" font-weight="bold"
+          text-anchor="middle" fill="#c99563">
+      AB
+    </text>
+  </g>
+</svg>
