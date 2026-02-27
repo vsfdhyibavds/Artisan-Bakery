@@ -20,6 +20,21 @@ export interface Testimonial {
   date: string;
 }
 
+export interface ProductReview {
+  id: string;
+  product_id: string;
+  customer_id?: string;
+  rating: number;
+  title: string;
+  content: string;
+  is_verified_purchase: boolean;
+  helpful_count: number;
+  is_approved: boolean;
+  created_at: string;
+  updated_at: string;
+  customer_name?: string;
+}
+
 export interface MenuItem {
   label: string;
   href: string;

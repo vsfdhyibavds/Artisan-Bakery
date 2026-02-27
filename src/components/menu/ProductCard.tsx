@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Info, Heart, Leaf } from 'lucide-react';
+import { ShoppingCart, Star, Info, Heart, Leaf, X } from 'lucide-react';
 import { Product } from '../../lib/types';
 import { formatPrice } from '../../lib/utils';
 import { useCartStore } from '../../stores/cartStore';
+import { useProductReviews } from '../../hooks/useProductReviews';
+import ReviewList from './ReviewList';
+import ReviewForm from './ReviewForm';
 
 interface ProductCardProps {
   product: Product;
@@ -49,7 +52,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
-          
+
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             {product.isSpecial && (
@@ -71,8 +74,8 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             <button
               onClick={toggleLike}
               className={`p-2 rounded-full backdrop-blur-sm transition-colors ${
-                isLiked 
-                  ? 'bg-red-500 text-white' 
+                isLiked
+                  ? 'bg-red-500 text-white'
                   : 'bg-white/80 text-gray-700 hover:bg-white'
               }`}
             >
@@ -127,6 +130,11 @@ export default function ProductCard({ product, index }: ProductCardProps) {
               )}
             </div>
           )}
+
+          {/* Rating Preview */}
+          <div className="flex items-center gap-2 mb-3">
+            <RatingPreview productId={product.id} />
+          </div>
 
           {/* Price and Add to Cart */}
           <div className="flex items-center justify-between">
@@ -214,6 +222,9 @@ function ProductDetailsModal({ product, onClose, onAddToCart }: ProductDetailsMo
               <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">
                 {product.name}
               </h2>
+              <div className="flex items-center gap-2 mb-3">
+                <RatingPreview productId={product.id} />
+              </div>
               <div className="flex items-center gap-2">
                 {product.specialPrice ? (
                   <>
@@ -231,6 +242,12 @@ function ProductDetailsModal({ product, onClose, onAddToCart }: ProductDetailsMo
                 )}
               </div>
             </div>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
 
           <p className="text-gray-600 dark:text-gray-300 mb-6">
@@ -269,7 +286,7 @@ function ProductDetailsModal({ product, onClose, onAddToCart }: ProductDetailsMo
           </div>
 
           <div className="flex gap-4">
-            <button 
+            <button
               onClick={onAddToCart}
               className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
             >
@@ -280,8 +297,67 @@ function ProductDetailsModal({ product, onClose, onAddToCart }: ProductDetailsMo
               Save for Later
             </button>
           </div>
+
+          {/* Reviews Section */}
+          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+              Customer Reviews
+            </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <ReviewForm
+                productId={product.id}
+                onSubmitSuccess={() => window.location.reload()}
+              />
+              <ReviewListSection productId={product.id} />
+            </div>
+          </div>
         </div>
       </motion.div>
     </motion.div>
+  );
+}
+
+// Rating Preview Component
+function RatingPreview({ productId }: { productId: string }) {
+  const { reviews, averageRating, totalReviews, loading } = useProductReviews(productId);
+
+  if (loading) return null;
+  if (totalReviews === 0) return null;
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex gap-0.5">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-4 h-4 ${
+              star <= Math.round(averageRating)
+                ? 'fill-yellow-400 text-yellow-400'
+                : 'text-gray-300 dark:text-gray-600'
+            }`}
+          />
+        ))}
+      </div>
+      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        {averageRating}
+      </span>
+      <span className="text-sm text-gray-600 dark:text-gray-400">
+        ({totalReviews})
+      </span>
+    </div>
+  );
+}
+
+// Review List Section
+function ReviewListSection({ productId }: { productId: string }) {
+  const { reviews, averageRating, totalReviews, loading } = useProductReviews(productId);
+
+  return (
+    <ReviewList
+      reviews={reviews}
+      averageRating={averageRating}
+      totalReviews={totalReviews}
+      loading={loading}
+    />
   );
 }
