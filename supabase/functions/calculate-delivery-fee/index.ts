@@ -22,21 +22,21 @@ serve(async (req) => {
 
     // Mock delivery fee calculation based on distance/zone
     // In a real implementation, you would use Google Maps API or similar
-    
-    let deliveryFee = 5.99 // Base fee
+
+    let deliveryFee = 779 // Base fee (KES)
     let estimatedTime = '30-45 minutes'
     let canDeliver = true
 
-    // Mock zone-based pricing
+    // Mock zone-based pricing (in KES)
     const zipCodeNum = parseInt(zipCode)
     if (zipCodeNum >= 10000 && zipCodeNum <= 10099) {
-      deliveryFee = 5.99 // Local zone
+      deliveryFee = 779 // Local zone
       estimatedTime = '30-45 minutes'
     } else if (zipCodeNum >= 10100 && zipCodeNum <= 10199) {
-      deliveryFee = 8.99 // Extended zone
+      deliveryFee = 1169 // Extended zone
       estimatedTime = '45-60 minutes'
     } else if (zipCodeNum >= 10200 && zipCodeNum <= 10299) {
-      deliveryFee = 15.99 // Regional zone
+      deliveryFee = 2079 // Regional zone
       estimatedTime = '60-90 minutes'
     } else {
       canDeliver = false
@@ -44,17 +44,17 @@ serve(async (req) => {
       estimatedTime = 'Not available'
     }
 
-    // Free delivery for orders over $150
-    if (orderTotal >= 150 && canDeliver) {
+    // Free delivery for orders over 19500 KES (150 USD)
+    if (orderTotal >= 19500 && canDeliver) {
       deliveryFee = 0
     }
 
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         canDeliver,
         deliveryFee,
         estimatedTime,
-        freeDeliveryThreshold: 150,
+        freeDeliveryThreshold: 19500,
         message: canDeliver ? 'Delivery available' : 'Delivery not available to this area'
       }),
       {

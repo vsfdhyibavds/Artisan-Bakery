@@ -56,7 +56,7 @@ export function SEOMeta({
 
       {/* Additional SEO */}
       <meta name="theme-color" content="#8B6F47" />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/logo.png" />
     </Helmet>
   );
 }

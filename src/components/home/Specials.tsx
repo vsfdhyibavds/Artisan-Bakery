@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Star, Clock, ShoppingCart } from 'lucide-react';
 import { getSpecialProducts } from '../../data/products';
+import { formatPrice } from '../../lib/utils';
 
 export default function Specials() {
   const specials = getSpecialProducts();
@@ -65,14 +66,14 @@ export default function Specials() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl font-bold text-accent-600 dark:text-accent-400">
-                      ${product.specialPrice?.toFixed(2)}
+                      {formatPrice(product.specialPrice || product.price)}
                     </span>
                     <span className="text-lg text-gray-500 line-through">
-                      ${product.price.toFixed(2)}
+                      {formatPrice(product.price)}
                     </span>
                   </div>
                   <div className="text-sm text-green-600 dark:text-green-400 font-semibold">
-                    Save ${((product.price - (product.specialPrice || 0))).toFixed(2)}
+                    Save {formatPrice((product.price - (product.specialPrice || 0)))}
                   </div>
                 </div>
 

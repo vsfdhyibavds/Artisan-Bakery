@@ -2,13 +2,14 @@ import { motion } from 'framer-motion';
 import { ShoppingBag, Clock, Star, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../stores/cartStore';
+import { formatPrice } from '../../lib/utils';
 
 const quickOrderItems = [
 	{
 		id: 'morning-box',
 		name: 'Morning Box',
 		description: '4 croissants + 2 muffins + coffee',
-		price: 18.99,
+		price: 2469,
 		image: 'https://images.pexels.com/photos/2135/food-france-morning-breakfast.jpg?auto=compress&cs=tinysrgb&w=400',
 		icon: Clock,
 		popular: true,
@@ -17,7 +18,7 @@ const quickOrderItems = [
 		id: 'family-bread',
 		name: 'Family Bread Bundle',
 		description: '2 sourdough + 1 whole wheat + baguette',
-		price: 24.5,
+		price: 3185,
 		image: 'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=400',
 		icon: ShoppingBag,
 		popular: false,
@@ -26,7 +27,7 @@ const quickOrderItems = [
 		id: 'sweet-treats',
 		name: 'Sweet Treats Box',
 		description: '6 cookies + 2 danish + 1 cake slice',
-		price: 16.75,
+		price: 2178,
 		image: 'https://images.pexels.com/photos/230325/pexels-photo-230325.jpeg?auto=compress&cs=tinysrgb&w=400',
 		icon: Star,
 		popular: true,
@@ -35,7 +36,7 @@ const quickOrderItems = [
 		id: 'party-platter',
 		name: 'Party Platter',
 		description: 'Assorted pastries for 8-10 people',
-		price: 45.0,
+		price: 5850,
 		image: 'https://images.pexels.com/photos/3892469/pexels-photo-3892469.jpeg?auto=compress&cs=tinysrgb&w=400',
 		icon: Zap,
 		popular: false,
@@ -121,7 +122,7 @@ export default function QuickOrder() {
 									</p>
 									<div className="flex items-center justify-between">
 										<span className="text-lg font-bold text-primary-600 dark:text-primary-400">
-											${item.price.toFixed(2)}
+											{formatPrice(item.price)}
 										</span>
 										<button
 											onClick={() => handleQuickAdd(item)}

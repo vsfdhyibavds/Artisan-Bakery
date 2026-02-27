@@ -50,7 +50,7 @@ export const createPaymentIntent = async (amount: number, email: string, orderId
       return {
         clientSecret: `pi_test_${orderId}_secret_${Date.now()}`,
         amount,
-        currency: 'usd'
+        currency: 'kes'
       };
     }
 
@@ -143,7 +143,7 @@ export const formatAmountForStripe = (amount: number): number => {
 export const formatAmountForDisplay = (amount: number): string => {
   const numberFormat = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'KES',
     minimumFractionDigits: 2,
   });
 

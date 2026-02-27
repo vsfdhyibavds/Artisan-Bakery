@@ -58,7 +58,7 @@ export function generateProductSchema(product: any) {
     description: product.description,
     image: product.image,
     price: product.price,
-    priceCurrency: 'USD',
+    priceCurrency: 'KES',
     availability: 'https://schema.org/InStock',
     aggregateRating: {
       '@type': 'AggregateRating',

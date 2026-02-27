@@ -41,7 +41,7 @@ class Analytics {
     this.trackEvent('purchase', {
       transaction_id: orderId,
       value: value,
-      currency: 'USD',
+      currency: 'KES',
       items: items.map(item => ({
         item_id: item.id,
         item_name: item.name,
@@ -55,7 +55,7 @@ class Analytics {
   // Track product views
   trackProductView(productId: string, productName: string, category: string, price: number) {
     this.trackEvent('view_item', {
-      currency: 'USD',
+      currency: 'KES',
       value: price,
       items: [{
         item_id: productId,
@@ -69,7 +69,7 @@ class Analytics {
   // Track cart actions
   trackAddToCart(item: any) {
     this.trackEvent('add_to_cart', {
-      currency: 'USD',
+      currency: 'KES',
       value: item.price * item.quantity,
       items: [{
         item_id: item.id,
@@ -83,7 +83,7 @@ class Analytics {
 
   trackRemoveFromCart(item: any) {
     this.trackEvent('remove_from_cart', {
-      currency: 'USD',
+      currency: 'KES',
       value: item.price * item.quantity,
       items: [{
         item_id: item.id,
