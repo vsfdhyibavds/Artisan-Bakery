@@ -1,4 +1,26 @@
-import { useState, useEffect } from 'react';
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://eugenco578_db_user:NF3kDFxFp08v0WUV@cluster0.n3i7urj.mongodb.net/?appName=Cluster0";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ProductReview } from '../lib/types';
 
@@ -31,7 +53,7 @@ export const useProductReviews = (productId: string) => {
       setTotalReviews(data?.length || 0);
 
       if (data && data.length > 0) {
-        const avgRating = data.reduce((sum, review) => sum + review.rating, 0) / data.length;
+        const avgRating = data.reduce((sum: number, review: any) => sum + review.rating, 0) / data.length;
         setAverageRating(Math.round(avgRating * 10) / 10);
       }
     } catch (err) {
