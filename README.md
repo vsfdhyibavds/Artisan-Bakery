@@ -212,8 +212,10 @@ npm run build
 1. Connect GitHub repository
 2. Build command: `npm run build`
 3. Publish directory: `dist`
-4. Add environment variables in dashboard
+4. In **Site configuration → Environment variables**, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to enable database-backed features
 5. Deploy
+
+Vite embeds these variables during the build, so trigger a new deploy after adding or changing them. Without them, the site still loads in demo mode, but authentication and database-backed features are unavailable.
 
 ### **Vercel** (Recommended)
 1. Import project from GitHub

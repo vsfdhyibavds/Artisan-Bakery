@@ -24,7 +24,7 @@ class SupabaseManager {
   }
 
   // Auto-detect Supabase configuration from multiple sources
-  private detectConfiguration(): SupabaseConfig {
+  private detectConfiguration(): SupabaseConfig | null {
     // Priority order: Environment variables -> Local storage
     const sources = [
       // 1. Environment variables (highest priority)
@@ -52,10 +52,7 @@ class SupabaseManager {
       }
     }
 
-    // No valid config found - throw error instead of falling back to demo
-    const error = 'No database configuration found. Please set VITE_DB_HOST/VITE_DB_PORT for local development or VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY for cloud Supabase.';
-    console.error('❌ ' + error);
-    throw new Error(error);
+    return null;
   }
 
   private isValidConfig(url?: string | null, anonKey?: string | null): boolean {
@@ -86,6 +83,11 @@ class SupabaseManager {
     }
 
     this.config = this.detectConfiguration();
+    if (!this.config) {
+      console.warn('Supabase is not configured. Running in demo mode; set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable database-backed features.');
+      this.client = this.createMockSupabaseClient();
+      return this.client;
+    }
 
     try {
       this.client = createClient<Database>(this.config.url, this.config.anonKey, {
@@ -112,7 +114,7 @@ class SupabaseManager {
 
   // Create a mock Supabase client for offline development
   private createMockSupabaseClient() {
-    console.log('🔧 Using mock authentication for offline development');
+    console.log('🔧 Using mock authentication for demo/offline mode');
     return {
       auth: {
         signUp: mockAuth.signUp,
@@ -184,6 +186,13 @@ class SupabaseManager {
   getConfigurationStatus() {
     if (!this.config) {
       this.config = this.detectConfiguration();
+    }
+    if (!this.config) {
+      return {
+        isConfigured: false,
+        url: '',
+        source: 'none'
+      };
     }
     return {
       isConfigured: this.config.isConfigured,
