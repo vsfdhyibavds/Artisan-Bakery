@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { serve } from 'https://deno.land/std@0.140.0/http/server.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -20,7 +20,7 @@ interface OrderConfirmationData {
   orderType: string
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -33,17 +33,17 @@ serve(async (req) => {
       <h2>Order Confirmation - Artisan Bakery</h2>
       <p>Dear ${customerName},</p>
       <p>Thank you for your order! Here are the details:</p>
-      
+
       <h3>Order #${orderId}</h3>
       <ul>
         ${orderItems.map(item => `<li>${item.quantity}x ${item.name} - $${item.price.toFixed(2)}</li>`).join('')}
       </ul>
-      
+
       <p><strong>Total: $${total.toFixed(2)}</strong></p>
       <p><strong>${orderType === 'pickup' ? 'Pickup' : 'Delivery'} Date:</strong> ${pickupDate} at ${pickupTime}</p>
-      
+
       <p>We'll have your order ready for you. Thank you for choosing Artisan Bakery!</p>
-      
+
       <p>Best regards,<br>The Artisan Bakery Team</p>
     `
 
@@ -59,8 +59,9 @@ serve(async (req) => {
       },
     )
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: errorMessage }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400,

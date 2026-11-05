@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, Star, ChefHat, Gift, Heart } from 'lucide-react';
-import { formatDate } from '../lib/utils';
+import { formatDate, formatPrice } from '../lib/utils';
 import { useEvents } from '../hooks/useEvents';
 
 interface Event {
@@ -264,7 +264,7 @@ export default function Events() {
               </div>
               <div className="lg:col-span-1">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                  <div className="text-3xl font-bold mb-2">${selectedEvent.price}</div>
+                  <div className="text-3xl font-bold mb-2">{formatPrice(selectedEvent.price)}</div>
                   <div className="text-gray-300 mb-4">per person</div>
                   <button className="w-full bg-accent-500 hover:bg-accent-600 text-white py-3 rounded-lg font-semibold transition-colors mb-4">
                     Book Now
@@ -435,7 +435,7 @@ export default function Events() {
                       </span>
                     </div>
                     <div className="absolute top-4 right-4 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                      ${event.price}
+                      {formatPrice(event.price)}
                     </div>
                   </div>
 

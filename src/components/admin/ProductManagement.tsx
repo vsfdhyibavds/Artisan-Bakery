@@ -114,7 +114,7 @@ export default function ProductManagement() {
             {products.map((product: Product) => (
               <tr key={product.id}>
                 <td className="py-2 px-4">{product.name}</td>
-                <td className="py-2 px-4">${product.price}</td>
+                <td className="py-2 px-4" suppressHydrationWarning>{typeof product.price === 'number' ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'KES' }).format(product.price) : product.price}</td>
                 <td className="py-2 px-4">{product.stock}</td>
                 <td className="py-2 px-4">{product.category}</td>
                 <td className="py-2 px-4">

@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { serve } from 'https://deno.land/std@0.140.0/http/server.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +13,7 @@ interface PaymentData {
   paymentMethodId: string
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -23,7 +23,7 @@ serve(async (req) => {
 
     // In a real implementation, you would integrate with Stripe or another payment processor
     // This is a mock implementation for demonstration
-    
+
     const mockPaymentResult = {
       id: `pi_${Math.random().toString(36).substr(2, 9)}`,
       status: 'succeeded',
@@ -43,10 +43,10 @@ serve(async (req) => {
 
     if (success) {
       return new Response(
-        JSON.stringify({ 
-          success: true, 
+        JSON.stringify({
+          success: true,
           paymentIntent: mockPaymentResult,
-          message: 'Payment processed successfully' 
+          message: 'Payment processed successfully'
         }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -55,9 +55,9 @@ serve(async (req) => {
       )
     } else {
       return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Payment failed - insufficient funds' 
+        JSON.stringify({
+          success: false,
+          error: 'Payment failed - insufficient funds'
         }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -66,8 +66,9 @@ serve(async (req) => {
       )
     }
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: errorMessage }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400,

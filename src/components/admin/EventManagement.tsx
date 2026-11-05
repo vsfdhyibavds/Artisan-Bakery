@@ -184,7 +184,7 @@ export default function EventManagement() {
             <input
               {...register('price', { min: 0 })}
               type="number"
-              placeholder="Price ($)"
+              placeholder="Price (KES)"
               step="0.01"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             />
@@ -232,7 +232,7 @@ export default function EventManagement() {
                       <span>📅 {event.date} at {event.time}</span>
                       <span>📍 {event.location}</span>
                       <span>👥 {event.registrations}/{event.capacity}</span>
-                      <span>💰 ${event.price}</span>
+                      <span>💰 {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'KES' }).format(event.price)}</span>
                     </div>
                   </div>
                   <div className="flex gap-2">

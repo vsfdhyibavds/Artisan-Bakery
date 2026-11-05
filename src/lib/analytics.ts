@@ -1,3 +1,8 @@
+// Declare gtag as a global function (from Google Analytics)
+declare global {
+  function gtag(command: string, ...args: any[]): void;
+}
+
 export interface AnalyticsEvent {
   event: string;
   properties?: Record<string, any>;
