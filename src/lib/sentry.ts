@@ -1,21 +1,27 @@
 /**
  * Sentry Error Tracking Configuration
- * Captures and reports errors in production
- * Optional: Only active if Sentry package is installed and DSN is configured
+ * Captures and reports errors in production.
+ * Sentry is optional: these functions are no-ops until @sentry/react is installed
+ * and VITE_SENTRY_DSN is configured. This keeps the build working without the package.
  */
 
-let Sentry: any = null;
+let Sentry: typeof import('@sentry/react') | null = null;
 
-// Try to load Sentry if available
-try {
-  Sentry = require('@sentry/react');
-} catch {
-  // Sentry not installed, that's okay - error tracking will be disabled
+export async function loadSentry(): Promise<typeof import('@sentry/react') | null> {
+  if (Sentry) return Sentry;
+  try {
+    const moduleName = '@sentry/react';
+    Sentry = await import(/* @vite-ignore */ moduleName);
+    return Sentry;
+  } catch {
+    return null;
+  }
 }
 
-export const initializeSentry = () => {
-  if (!Sentry) {
-    console.log('Sentry not installed. Error tracking disabled. Run: npm install @sentry/react @sentry/tracing');
+export const initializeSentry = async () => {
+  const sentry = await loadSentry();
+  if (!sentry) {
+    console.log('Sentry not installed. Error tracking disabled. Run: npm install @sentry/react');
     return;
   }
 
@@ -26,15 +32,13 @@ export const initializeSentry = () => {
     return;
   }
 
-  Sentry.init({
+  sentry.init({
     dsn: sentryDsn,
     environment: import.meta.env.MODE,
     tracesSampleRate: import.meta.env.MODE === 'production' ? 0.1 : 1.0,
     beforeSend(event: any, hint: any) {
-      // Filter out certain errors
       if (event.exception) {
         const error = hint.originalException;
-        // Don't send network errors in development
         if (import.meta.env.MODE === 'development' && error instanceof Error && error.message.includes('fetch')) {
           return null;
         }
@@ -43,7 +47,7 @@ export const initializeSentry = () => {
     },
   });
 
-  console.log('✅ Sentry initialized for error tracking');
+  console.log('Sentry initialized for error tracking');
 };
 
 export const captureException = (error: any, context?: Record<string, any>) => {
@@ -62,11 +66,7 @@ export const captureMessage = (message: string, level: 'fatal' | 'error' | 'warn
 
 export const setUserContext = (userId: string, email?: string, username?: string) => {
   if (!Sentry) return;
-  Sentry.setUser({
-    id: userId,
-    email,
-    username,
-  });
+  Sentry.setUser({ id: userId, email, username });
 };
 
 export const clearUserContext = () => {

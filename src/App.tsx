@@ -35,10 +35,6 @@ const queryClient = new QueryClient({
   },
 });
 
-interface HeaderProps {
-  onAuthClick: (mode: 'signin' | 'signup') => void;
-}
-
 function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
@@ -48,10 +44,6 @@ function App() {
   useEffect(() => {
     initialize();
   }, [initialize]);
-
-  const openAuthModal = () => {
-    setAuthModalOpen(true);
-  };
 
   const openAuthModalWithMode = (mode: 'signin' | 'signup') => {
     setAuthMode(mode);

@@ -1,16 +1,6 @@
 import { supabase } from './supabase';
 import { emailService } from './email';
-
-// Optional error tracking
-let captureException: (error: any, context?: Record<string, any>) => void = () => {};
-try {
-  const sentryModule = require('./sentry');
-  if (sentryModule.captureException) {
-    captureException = sentryModule.captureException;
-  }
-} catch {
-  // Sentry module not available, that's okay
-}
+import { captureException } from './sentry';
 
 export interface DeliveryCalculation {
   canDeliver: boolean;

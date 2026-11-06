@@ -136,18 +136,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true });
 
-      // Clear any stale session data first
-      if (typeof window !== 'undefined') {
-        const keysToRemove = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith('sb-')) {
-            keysToRemove.push(key);
-          }
-        }
-        keysToRemove.forEach(key => localStorage.removeItem(key));
-      }
-
       const { user } = await auth.getCurrentUser();
 
       if (user) {
