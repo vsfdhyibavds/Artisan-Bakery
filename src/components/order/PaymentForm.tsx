@@ -92,12 +92,13 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
         );
 
         if (result.success) {
-          // Create order with successful payment
           await createOrder.mutateAsync({
-            ...orderData,
+            orderType: orderData.orderType,
+            pickupDate: orderData.pickupDate,
+            pickupTime: orderData.pickupTime,
+            specialInstructions: orderData.specialInstructions,
+            deliveryAddress: orderData.deliveryAddress,
             paymentMethodId: result.paymentIntentId,
-            paymentMethod: 'stripe',
-            status: 'paid'
           });
           toast.success('Payment processed successfully!');
           onSuccess();
@@ -109,10 +110,12 @@ export default function PaymentForm({ orderData, total, onSuccess, onBack }: Pay
         const mockPaymentMethodId = `pm_${Math.random().toString(36).substr(2, 9)}`;
 
         await createOrder.mutateAsync({
-          ...orderData,
+          orderType: orderData.orderType,
+          pickupDate: orderData.pickupDate,
+          pickupTime: orderData.pickupTime,
+          specialInstructions: orderData.specialInstructions,
+          deliveryAddress: orderData.deliveryAddress,
           paymentMethodId: mockPaymentMethodId,
-          paymentMethod: 'mock',
-          status: 'confirmed'
         });
         toast.success('Order confirmed! (Test mode)');
         onSuccess();

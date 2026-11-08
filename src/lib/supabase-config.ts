@@ -70,22 +70,15 @@ class SupabaseManager {
   initializeClient() {
     if (this.client) return this.client;
 
-    // Clear any stale Supabase session data
-    if (typeof window !== 'undefined') {
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.startsWith('sb-') || key.includes('supabase'))) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach(key => localStorage.removeItem(key));
-    }
-
     this.config = this.detectConfiguration();
     if (!this.config) {
-      console.warn('Supabase is not configured. Running in demo mode; set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable database-backed features.');
-      this.client = this.createMockSupabaseClient();
+      if (import.meta.env.MODE === 'development') {
+        console.warn('Supabase is not configured. Running in demo mode; set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable database-backed features.');
+        this.client = this.createMockSupabaseClient();
+      } else {
+        console.error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+        this.client = this.createMockSupabaseClient();
+      }
       return this.client;
     }
 
@@ -102,19 +95,22 @@ class SupabaseManager {
           }
         }
       });
-      console.log('✅ Supabase client initialized successfully');
+      console.log('Supabase client initialized successfully');
     } catch (error) {
-      console.error('❌ Supabase client failed, using mock auth for offline development:', error);
-      // Use mock auth for local development when Supabase is unavailable
-      this.client = this.createMockSupabaseClient();
+      console.error('Supabase client initialization failed:', error);
+      if (import.meta.env.MODE === 'development') {
+        this.client = this.createMockSupabaseClient();
+      } else {
+        throw error;
+      }
     }
 
     return this.client;
   }
 
-  // Create a mock Supabase client for offline development
+  // Create a mock Supabase client for offline development only
   private createMockSupabaseClient() {
-    console.log('🔧 Using mock authentication for demo/offline mode');
+    console.log('Using mock authentication for demo/offline mode (development only)');
     return {
       auth: {
         signUp: mockAuth.signUp,

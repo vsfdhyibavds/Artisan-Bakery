@@ -1,7 +1,7 @@
 /**
- * Mock Authentication for Local Development
- * Uses data from local Postgres database
- * In production, use real Supabase
+ * Mock Authentication for Local Development ONLY
+ * This module must never be used in production. The supabase-config
+ * manager guards the fallback so it only activates in dev mode.
  */
 
 interface MockUser {
@@ -45,7 +45,7 @@ const decryptSession = (encrypted: string): any => {
   }
 };
 
-// Dev password from environment or fallback
+// Dev password — only used in local development, never in production builds
 const DEV_PASSWORD = import.meta.env.VITE_MOCK_AUTH_PASSWORD || 'dev-password-2024';
 
 // Mock users stored locally (you can add more)
