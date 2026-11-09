@@ -1,0 +1,17 @@
+{
+  "projectId": "72680219",
+  "functions": {
+    "calculate-delivery-fee": {
+      "hasChanged": false,
+      "hash": "676c522ffc2667509ef79086a827df2a8ee0ea21ad486647c2a5c811517e73ce"
+    },
+    "process-payment": {
+      "hasChanged": false,
+      "hash": "3561f56ef8631530cfd23e867932af8ceb4b642a437c527126861f2097ec7c68"
+    },
+    "send-order-confirmation": {
+      "hasChanged": false,
+      "hash": "e93773a1850cbedb96477fffd25c3e0ab05bc56874682242f05cd51e06246196"
+    }
+  }
+}

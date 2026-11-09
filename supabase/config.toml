@@ -1,0 +1,13 @@
+project_id = ""
+
+[functions.calculate-delivery-fee]
+verify_jwt = true
+entrypoint = "./functions/calculate-delivery-fee/index.ts"
+
+[functions.process-payment]
+verify_jwt = true
+entrypoint = "./functions/process-payment/index.ts"
+
+[functions.send-order-confirmation]
+verify_jwt = true
+entrypoint = "./functions/send-order-confirmation/index.ts"

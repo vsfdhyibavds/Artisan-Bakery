@@ -59,7 +59,7 @@ class EmailService {
     order_type: 'pickup' | 'delivery';
   }): Promise<EmailResult> {
     const itemsHtml = order.items
-      .map(item => `<tr><td style="padding:8px">${item.product_name}</td><td style="padding:8px;text-align:right">x${item.quantity}</td><td style="padding:8px;text-align:right">$${(item.total_price).toFixed(2)}</td></tr>`)
+      .map(item => `<tr><td style="padding:8px">${item.product_name}</td><td style="padding:8px;text-align:right">x${item.quantity}</td><td style="padding:8px;text-align:right">KES ${(item.total_price).toLocaleString('en-KE', { minimumFractionDigits: 0 })}</td></tr>`)
       .join('');
 
     const pickupInfo = order.order_type === 'pickup'
@@ -106,7 +106,7 @@ class EmailService {
                 </tbody>
               </table>
 
-              <p><strong style="color: #8B4513; font-size: 16px;">Total: $${(order.total).toFixed(2)}</strong></p>
+              <p><strong style="color: #8B4513; font-size: 16px;">Total: KES ${(order.total).toLocaleString('en-KE', { minimumFractionDigits: 0 })}</strong></p>
 
               <h3>Pickup Details</h3>
               ${pickupInfo}
