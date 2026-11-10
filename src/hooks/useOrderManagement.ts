@@ -83,7 +83,7 @@ export const useOrderManagement = () => {
       // Process payment
       const paymentResult = await api.processPayment(
         total,
-        'usd',
+        'kes',
         order.id,
         customer.email,
         orderData.paymentMethodId

@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../stores/authStore';
 import { useCartStore } from '../stores/cartStore';
 import toast from 'react-hot-toast';
-import { mockAuth } from '../lib/mock-auth';
 
 function PasswordChange({ onChange }: { onChange: () => void }) {
   const { user } = useAuthStore();
@@ -26,33 +25,12 @@ function PasswordChange({ onChange }: { onChange: () => void }) {
 
     setIsUpdating(true);
     try {
-      // For mock auth in development
-      if (import.meta.env.MODE === 'development') {
-        // Verify old password by attempting to sign in with it
-        const verifyResult = await mockAuth.signIn(user.email, data.oldPassword);
-        if (verifyResult.error) {
-          toast.error('Current password is incorrect');
-          setIsUpdating(false);
-          return;
-        }
-
-        // Update password in mock auth (we need to access the mock users directly)
-        // For now, show success message as updating mock users requires direct access
-        toast.success('Password changed successfully (Development mode)');
-      } else {
-        // For real Supabase auth
-        const { error } = await supabase.auth.updateUser({ password: data.newPassword });
-        if (error) {
-          if (error.message.includes('current password')) {
-            toast.error('Current password is incorrect');
-          } else {
-            toast.error(error.message || 'Failed to change password');
-          }
-          return;
-        }
-        toast.success('Password changed successfully');
+      const { error } = await supabase.auth.updateUser({ password: data.newPassword });
+      if (error) {
+        toast.error(error.message || 'Failed to change password');
+        return;
       }
-
+      toast.success('Password changed successfully');
       reset();
       onChange();
     } catch (error: any) {

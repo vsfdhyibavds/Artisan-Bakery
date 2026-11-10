@@ -1,38 +1,26 @@
-import { supabaseManager } from './supabase-config';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from './database.types';
 
-// Initialize Supabase client with auto-configuration
-export const supabase = supabaseManager.initializeClient();
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Clear stale session on initialization
-if (typeof window !== 'undefined') {
-  supabase.auth.onAuthStateChange((event: string, session: any) => {
-    if (event === 'TOKEN_REFRESHED' && !session) {
-      // If token refresh failed, clear all auth data
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('sb-')) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach(key => localStorage.removeItem(key));
-    }
-  });
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY environment variables.');
 }
 
-// Auto-setup for current platform
-supabaseManager.autoSetupForPlatform();
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
+  },
+});
 
-// Export configuration utilities
-export const configureSupabase = (url: string, anonKey: string) => {
-  return supabaseManager.configureSupabase(url, anonKey);
-};
-
-export const getSupabaseStatus = () => {
-  return supabaseManager.getConfigurationStatus();
-}
-
-// Enhanced auth helpers with better error handling
 export const auth = {
   signUp: async (email: string, password: string, userData: any) => {
     try {
@@ -91,9 +79,7 @@ export const auth = {
   }
 };
 
-// Enhanced database helpers with retry logic
 export const db = {
-  // Products
   getProducts: async () => {
     try {
       const { data, error } = await supabase
@@ -136,7 +122,6 @@ export const db = {
     }
   },
 
-  // Orders
   createOrder: async (orderData: any) => {
     try {
       const { data, error } = await supabase
@@ -195,7 +180,6 @@ export const db = {
     }
   },
 
-  // Customers
   createCustomer: async (customerData: any) => {
     try {
       const { data, error } = await supabase
@@ -236,7 +220,6 @@ export const db = {
     }
   },
 
-  // Testimonials
   getApprovedTestimonials: async () => {
     try {
       const { data, error } = await supabase
@@ -263,7 +246,6 @@ export const db = {
     }
   },
 
-  // Events
   getActiveEvents: async () => {
     try {
       const { data, error } = await supabase
@@ -307,7 +289,6 @@ export const db = {
     }
   },
 
-  // Blog posts
   getPublishedBlogPosts: async () => {
     try {
       const { data, error } = await supabase
@@ -335,7 +316,6 @@ export const db = {
     }
   },
 
-  // Newsletter
   subscribeToNewsletter: async (email: string) => {
     try {
       const { data, error } = await supabase
@@ -349,7 +329,6 @@ export const db = {
     }
   },
 
-  // Get all newsletter subscribers (for admin)
   getNewsletterSubscribers: async () => {
     try {
       const { data, error } = await supabase
@@ -362,7 +341,6 @@ export const db = {
     }
   },
 
-  // Delete newsletter subscriber (for admin)
   deleteNewsletterSubscriber: async (subscriberId: string) => {
     try {
       const { error } = await supabase
@@ -375,7 +353,6 @@ export const db = {
     }
   },
 
-  // Custom cakes
   createCustomCake: async (cakeData: any) => {
     try {
       const { data, error } = await supabase
